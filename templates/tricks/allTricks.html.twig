@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TricksController!{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div id="card-snow" class="container-fluid mt-3 mb-3 pt-5 px-5">
+            <div class="row row-cols-1 row-cols-md-5 g-4">
+                {% for allTrick in allTricks %}            
+                    <div class="col">
+                        <div class="card h-100">
+                            <img src="./img/indie_grab.jpg" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <a class="" href="#"><h5 class="card-title">{{allTrick.title}}</h5></i></a>
+                                    <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                                    <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-trash-can"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>           
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
