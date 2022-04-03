@@ -30,4 +30,15 @@ class TricksController extends AbstractController
             'allTricks' => $allTricks
         ]);
     }
+
+    /**
+     * @Route("/tricks/{id<\d+>}", name="oneTricks")
+     */
+    public function oneTricks(TricksRepository $repository, $id)
+    {
+        $tricks = $repository->find($id);
+        return $this->render('tricks/oneTricks.html.twig', [
+            'tricks' => $tricks
+        ]);
+    }
 }
