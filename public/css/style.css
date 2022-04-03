@@ -1,0 +1,15 @@
+.maintxt {
+    position: relative;
+}
+
+.overlay-text {
+    position: absolute;
+    right: 0px;
+    bottom: 10px;
+}
+
+#accroche{
+    position: absolute;
+    top: 30%;
+    right: 20%;
+}

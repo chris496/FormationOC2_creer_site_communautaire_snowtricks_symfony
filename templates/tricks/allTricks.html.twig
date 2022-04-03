@@ -4,13 +4,6 @@
 
 {% block body %}
     <div class="container-fluid">
-        <div class="row">
-            <div class="col p-0 maintxt">
-                <img class="img-fluid img-responsive" src="./img/home2.jpg" alt="home-snow" style="width: 100%;">
-                <h1 id="accroche">Bienvenue sur Snow Tricks !!</h1>
-                <a class="overlay-text text-white" href="#card-snow"><i class="bg-transparent border-0 btn btn-primary fa-solid fa-circle-arrow-down fa-2xl"></i></a>
-            </div>            
-        </div>
         <div id="card-snow" class="container-fluid mt-3 mb-3 pt-5 px-5">
             <div class="row row-cols-1 row-cols-md-5 g-4">
                 {% for allTrick in allTricks %}            
@@ -27,11 +20,6 @@
                         </div>
                     </div>           
                 {% endfor %}
-            </div>
-        </div>
-        <div class="row mt-2 mb-5 me-0">
-            <div class="col d-flex justify-content-end">
-                <a class="" href="#card-snow"><i class="fa-solid fa-circle-arrow-up fa-2xl"></i></a>
             </div>
         </div>
     </div>
