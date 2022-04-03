@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TricksController!{% endblock %}
+
+{% block body %}
+<div class="example-wrapper">
+    test
+
+    {% for allTrick in allTricks %}
+        {{ allTrick.title }}
+    {% endfor %}
+</div>
+{% endblock %}
