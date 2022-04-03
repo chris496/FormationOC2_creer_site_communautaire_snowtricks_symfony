@@ -19,4 +19,15 @@ class TricksController extends AbstractController
             'allTricks' => $allTricks
         ]);
     }
+
+    /**
+     * @Route("/tricks", name="allTricks")
+     */
+    public function allTricks(TricksRepository $repository): Response
+    {
+        $allTricks = $repository->findAll();
+        return $this->render('tricks/allTricks.html.twig', [
+            'allTricks' => $allTricks
+        ]);
+    }
 }
