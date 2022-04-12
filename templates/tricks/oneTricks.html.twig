@@ -1,2 +1,46 @@
-hey {{ tricks.title }}
-hey {{ tricks.createdat | date('d/m/Y H:i') }}
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TricksController!{% endblock %}
+
+{% block body %}
+    <div class="my-3 container d-flex justify-content-center">
+        <div class="card">
+            <div class="d-flex justify-content-between">
+                <h1>{{ tricks.title }}</h1>
+                <div class="border">
+                    <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                    <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-trash-can"></i></a>
+                </div>
+            </div>
+            <img src="../img/home2.jpg" class="card-img-top" alt="...">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
+                    <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
+                    <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
+                    <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
+                    <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
+                    <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
+                </div>
+                <p class="card-text px-5 pt-4">Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <div class="row">
+                    <div class="col d-flex justify-content-center">
+                        <div class="mr-2 badge bg-success">{{ tricks.createdat | date('d/m/Y H:i') }}</div>
+                        <div class="mr-2 badge bg-warning">{{ tricks.updatedat | date('d/m/Y H:i') }}</div>
+                        <div class="badge bg-primary">groupe</div>
+                    </div>
+                </div>
+                <hr>
+                <form class="row d-flex justify-content-center">
+                    <div class="col-auto">
+                    <input type="text" class="form-control" id="comment" placeholder="votre commentaire...">
+                    </div>
+                    <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-3">Laisser un commentaire</button>
+                    </div>
+                </form>
+                <hr>
+            </div>
+        </div>
+    </div>
+{% endblock %}
