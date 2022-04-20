@@ -12,7 +12,9 @@
                     <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-trash-can"></i></a>
                 </div>
             </div>
-            <img src="../img/home2.jpg" class="card-img-top" alt="...">
+            {% for media in tricks.medias %}  
+                <img src="{{ asset('/uploads/'~media.name) }}" class="card-img-top" alt="...">
+            {% endfor %}
             <div class="card-body">
                 <div class="row">
                     <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
@@ -22,12 +24,12 @@
                     <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
                     <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
                 </div>
-                <p class="card-text px-5 pt-4">Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content. Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <p class="card-text px-5 pt-4">{{ tricks.content }}</p>
                 <div class="row">
                     <div class="col d-flex justify-content-center">
                         <div class="mr-2 badge bg-success">{{ tricks.createdat | date('d/m/Y H:i') }}</div>
                         <div class="mr-2 badge bg-warning">{{ tricks.updatedat | date('d/m/Y H:i') }}</div>
-                        <div class="badge bg-primary">groupe</div>
+                        <div class="badge bg-primary">{{ tricks.category.name }}</div>
                     </div>
                 </div>
                 <hr>

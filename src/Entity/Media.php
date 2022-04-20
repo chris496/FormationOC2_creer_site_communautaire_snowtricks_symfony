@@ -22,6 +22,11 @@ class Media
      */
     private $name;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Tricks::class, inversedBy="medias")
+     */
+    private $tricks;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,6 +40,18 @@ class Media
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getTricks(): ?Tricks
+    {
+        return $this->tricks;
+    }
+
+    public function setTricks(?Tricks $tricks): self
+    {
+        $this->tricks = $tricks;
 
         return $this;
     }
