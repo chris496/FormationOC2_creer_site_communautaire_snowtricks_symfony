@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TricksController!{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div id="card-snow" class="container-fluid mt-3 mb-3 pt-5 px-5">
+            <div class="row row-cols-1 row-cols-md-5 g-4">
+                {{ form(formNewTricks) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
