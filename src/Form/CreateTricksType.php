@@ -24,6 +24,12 @@ class CreateTricksType extends AbstractType
             ->add('title', TextType::class, [
                 'required' => true,
                 'label' => "Nom du tricks",
+                'attr' => [
+                    'placeholder' => 'Nom du tricks',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating',
+                ],
                 'constraints' => [
                     new NotBlank([
                        'message' => 'Veuillez saisir un nom'
@@ -36,7 +42,10 @@ class CreateTricksType extends AbstractType
             ])
             ->add('content', TextareaType::class, [
                 'required' => true,
-                'label' => "Description du tricks"
+                'label' => "Description du tricks",
+                'attr' => [
+                    'placeholder' => 'Description...'
+                ]
             ])
             ->add('user', EntityType::class, [
                 'required' => true,
@@ -46,9 +55,12 @@ class CreateTricksType extends AbstractType
               ])
             ->add('category', EntityType::class, [
                 'required' => true,
-                'label' => 'Choisir un groupe',
+                'label' => 'Choisir un groupe :',
                 'class' => Category::class,
                 'choice_label' => 'name',
+                'row_attr' => [
+                    'class' => 'input-group',
+                ],
                 'constraints' => [
                   new NotBlank([
                     'message' => 'Veuillez choisir un groupe'
@@ -56,13 +68,16 @@ class CreateTricksType extends AbstractType
                 ]
               ])
             ->add('medias', FileType::class,[
-                'label' => false,
+                'label' => 'Ajouter des fichiers :',
                 'multiple' => true,
                 'mapped' => false,
-                'required' => false
+                'required' => false,
+                'row_attr' => [
+                    'class' => 'input-group',
+                ]
             ])
             ->add('save', SubmitType::class, [
-                'label' => "Créer"
+                'label' => "Valider"
             ])
         ;
     }
