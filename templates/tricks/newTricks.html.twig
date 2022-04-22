@@ -1,12 +1,39 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TricksController!{% endblock %}
+{% block title %}Créer ton tricks !{% endblock %}
 
 {% block body %}
     <div class="container-fluid">
-        <div id="card-snow" class="container-fluid mt-3 mb-3 pt-5 px-5">
-            <div class="row row-cols-1 row-cols-md-5 g-4">
-                {{ form(formNewTricks) }}
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-5 m-5">
+                <h3 class="text-center mb-4">Création de votre tricks</h3>
+                <div class="border p-4">
+                    {{ form_start(formNewTricks, 
+                        {
+                        'attr': {
+                            'class': '' 
+                            },                   
+                        })
+                    }}
+                    <div class="mb-3">
+                        {{ form_widget(formNewTricks.title) }}
+                        {{ form_errors(formNewTricks.title) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_widget(formNewTricks.content) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_row(formNewTricks.category) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_row(formNewTricks.medias) }}
+                    </div>
+                    <div class="text-right">
+                        {{ form_row(formNewTricks.save) }}
+                    </div>
+                        {{ form_end(formNewTricks) }}  
+                    </div>
+                </div>
             </div>
         </div>
     </div>
