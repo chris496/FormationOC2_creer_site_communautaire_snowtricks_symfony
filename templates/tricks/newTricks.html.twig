@@ -8,13 +8,7 @@
             <div class="col-lg-5 m-5">
                 <h3 class="text-center mb-4">Création de votre tricks</h3>
                 <div class="border p-4">
-                    {{ form_start(formNewTricks, 
-                        {
-                        'attr': {
-                            'class': '' 
-                            },                   
-                        })
-                    }}
+                    {{ form_start(formNewTricks) }}
                     <div class="mb-3">
                         {{ form_widget(formNewTricks.title) }}
                         {{ form_errors(formNewTricks.title) }}
@@ -28,7 +22,7 @@
                     <div class="mb-3">
                         {{ form_row(formNewTricks.medias) }}
                     </div>
-                    <div class="text-right">
+                    <div class="text-end">
                         {{ form_row(formNewTricks.save) }}
                     </div>
                         {{ form_end(formNewTricks) }}  
