@@ -14,7 +14,9 @@
                                 <div class="d-flex justify-content-between align-items-center">
                                     <a class="" href="{{ path('oneTricks', {'id' : allTrick.id}) }}"><h5 class="card-title">{{allTrick.title}}</h5></i></a>
                                     <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
-                                    <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-trash-can"></i></a>
+                                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -22,5 +24,20 @@
                 {% endfor %}
             </div>
         </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteTricks" tabindex="-1" aria-labelledby="deleteTricksLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-body text-center">
+            <h5>Voulez-vous vraiment supprimer cette figure ?</h5>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+            <button type="button" class="btn btn-danger">Confirmer</button>
+        </div>
+        </div>
+    </div>
     </div>
 {% endblock %}
