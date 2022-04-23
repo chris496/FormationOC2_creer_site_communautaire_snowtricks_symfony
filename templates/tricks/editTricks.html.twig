@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifie un tricks !{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-5 m-5">
+                <h3 class="text-center mb-4">Modification du tricks</h3>
+                <div class="border p-4">
+                    {{ form_start(formEditTricks) }}
+                    <div class="mb-3">
+                        {{ form_widget(formEditTricks.title) }}
+                        {{ form_errors(formEditTricks.title) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_widget(formEditTricks.content) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_row(formEditTricks.category) }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form_row(formEditTricks.medias) }}
+                    </div>
+                    <div>
+                        <h5>Image(s) et/ou video(s) :</h5>
+                        <div class="mb-3 d-flex">
+                            {% for m in tricks.medias %}
+                                <div class="me-2 d-flex flex-column align-items-center">
+                                    <img src="{{ asset('/uploads/'~m.name) }}" alt="" width="100">
+                                    <a href="{{ path('editDeleteMedia', {'id' : m.id}) }}">Supprimer</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        {{ form_row(formEditTricks.save) }}
+                    </div>
+                        {{ form_end(formEditTricks) }}  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
