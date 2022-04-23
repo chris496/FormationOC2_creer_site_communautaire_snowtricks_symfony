@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Media;
 use App\Entity\Tricks;
 use App\Form\CreateTricksType;
+use App\Form\EditTricksType;
 use App\Repository\TricksRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -72,6 +73,39 @@ class TricksController extends AbstractController
     }
 
     /**
+     * @Route("/editTricks/{id<\d+>}", name="editTricks")
+     */
+    public function editTricks(Request $request, Tricks $tricks)
+    {
+        $form = $this->createForm(EditTricksType::class, $tricks);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $images = $form->get('medias')->getData();
+            foreach($images as $image){
+                $fichier = md5(uniqid()).'.'.$image->guessExtension();
+                $image->move(
+                    $this->getParameter('images_directory'),
+                    $fichier
+                );
+                $img = new Media();
+                $img->setName($fichier);
+                $tricks->addMedia($img);
+            }
+            $tricks->setUpdatedAt(new DateTimeImmutable());
+            $this->getDoctrine()->getManager()->flush();
+
+            $this->addFlash('success', 'Votre tricks a été modifié !!');
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('tricks/editTricks.html.twig', [
+            'formEditTricks' => $form->createView(),
+            'tricks' => $tricks
+        ]);
+    }
+
+    /**
      * @Route("/deleteTricks/{id<\d+>}", name="deleteTricks")
      */
     public function deleteTricks(Request $request, Tricks $tricks)
@@ -103,5 +137,23 @@ class TricksController extends AbstractController
         return $this->render('tricks/oneTricks.html.twig', [
             'tricks' => $tricks
         ]);
+    }
+
+    /**
+     * @Route("/deleteMedia/{id}", name="editDeleteMedia")
+     */
+    public function deleteMedia(Request $request, Media $media)
+    {
+        $name = $this->getParameter("images_directory") . '/' .$media->getName();
+        if(file_exists($name)){
+            unlink($name);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $em->remove($media);
+        $em->flush();
+
+        return $this->redirectToRoute(('home'));
     }
 }
