@@ -24,6 +24,7 @@ class Media
 
     /**
      * @ORM\ManyToOne(targetEntity=Tricks::class, inversedBy="medias")
+     * @ORM\JoinColumn(onDelete="CASCADE") 
      */
     private $tricks;
 

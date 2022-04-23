@@ -72,6 +72,29 @@ class TricksController extends AbstractController
     }
 
     /**
+     * @Route("/deleteTricks/{id<\d+>}", name="deleteTricks")
+     */
+    public function deleteTricks(Request $request, Tricks $tricks)
+    {
+        $medias = $tricks->getMedias();
+        if($medias){
+            foreach($medias as $media){
+                $name = $this->getParameter("images_directory") . '/' .$media->getName();
+                if(file_exists($name)){
+                    unlink($name);
+                }
+            }
+        }
+
+        $em = $this->getDoctrine()->getManager();
+
+        $em->remove($tricks);
+        $em->flush();
+
+        return $this->redirectToRoute(('home'));
+    }
+
+    /**
      * @Route("/tricks/{id<\d+>}", name="oneTricks")
      */
     public function oneTricks(TricksRepository $repository, $id)
