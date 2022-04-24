@@ -36,14 +36,30 @@
                 </div>
                 <hr>
                 <form class="row d-flex justify-content-center">
-                    <div class="col-auto">
-                    <input type="text" class="form-control" id="comment" placeholder="votre commentaire...">
-                    </div>
-                    <div class="col-auto">
-                    <button type="submit" class="btn btn-primary mb-3">Laisser un commentaire</button>
+                    <div class="col-auto d-flex align-items-center">
+                    {{ form_start(formNewComment) }}
+                        <div class="me-3">
+                            {{ form_widget(formNewComment.content) }}
+                        </div>
+                        <div>
+                        {{ form_row(formNewComment.save) }}
+                        </div>
+                    {{ form_end(formNewComment) }}
                     </div>
                 </form>
                 <hr>
+                <div class="d-flex flex-column align-items-center">
+                    {% for comment in tricks.comments %}
+                        <div class="d-flex align-items-center">
+                            <div class="me-2 p-3">
+                                avatar
+                            </div>
+                            <div class="mb-2 p-3 border shadow">
+                                {{ comment.content }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
