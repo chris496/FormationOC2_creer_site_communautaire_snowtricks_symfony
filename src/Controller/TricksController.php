@@ -2,13 +2,15 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Media;
 use App\Entity\Tricks;
-use App\Form\CreateTricksType;
-use App\Form\EditTricksType;
-use App\Repository\TricksRepository;
-use DateTime;
 use DateTimeImmutable;
+use App\Entity\Comment;
+use App\Form\EditTricksType;
+use App\Form\CreateTricksType;
+use App\Form\CommentTricksType;
+use App\Repository\TricksRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,7 +48,7 @@ class TricksController extends AbstractController
         $newTricks = new Tricks();
         $form = $this->createForm(CreateTricksType::class, $newTricks);
         $form->handleRequest($request);
-
+        
         if($form->isSubmitted() && $form->isValid()){
             $images = $form->get('medias')->getData();
             foreach($images as $image){
@@ -129,17 +131,6 @@ class TricksController extends AbstractController
     }
 
     /**
-     * @Route("/tricks/{id<\d+>}", name="oneTricks")
-     */
-    public function oneTricks(TricksRepository $repository, $id)
-    {
-        $tricks = $repository->find($id);
-        return $this->render('tricks/oneTricks.html.twig', [
-            'tricks' => $tricks
-        ]);
-    }
-
-    /**
      * @Route("/deleteMedia/{id}", name="editDeleteMedia")
      */
     public function deleteMedia(Request $request, Media $media)
@@ -156,4 +147,38 @@ class TricksController extends AbstractController
 
         return $this->redirectToRoute(('home'));
     }
+
+    /**
+     * @Route("/tricks/{id<\d+>}", name="oneTricks")
+     */
+    public function oneTricks(Request $request, TricksRepository $repository, $id)
+    {
+        $tricks = $repository->find($id);
+        
+        $newComment = new Comment();
+        $form = $this->createForm(CommentTricksType::class, $newComment);
+        $form->handleRequest($request);
+        
+        if($form->isSubmitted() && $form->isValid()){
+            dd("test");
+            dd($tricks);
+            $newComment->setTricks($tricks);
+            $newComment->setCreatedAt(new DateTimeImmutable());
+            $tricks->addComment($newComment);
+            dd($tricks);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($newComment);
+            $em->flush();
+
+            $this->addFlash('success', 'Votre nouveau tricks est crée !!');
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('tricks/oneTricks.html.twig', [
+            'formNewComment' => $form->createView(),
+            'tricks' => $tricks
+        ]);
+    }
+
+    
 }
