@@ -149,23 +149,17 @@ class TricksController extends AbstractController
     }
 
     /**
-     * @Route("/tricks/{id<\d+>}", name="oneTricks")
+     * @Route("/tricks/{trick<\d+>}", name="oneTricks")
      */
-    public function oneTricks(Request $request, TricksRepository $repository, $id)
+    public function oneTricks(Tricks $trick, Request $request)
     {
-        $tricks = $repository->find($id);
-        
         $newComment = new Comment();
         $form = $this->createForm(CommentTricksType::class, $newComment);
         $form->handleRequest($request);
-        
-        if($form->isSubmitted() && $form->isValid()){
-            dd("test");
-            dd($tricks);
-            $newComment->setTricks($tricks);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $newComment->setTricks($trick);
             $newComment->setCreatedAt(new DateTimeImmutable());
-            $tricks->addComment($newComment);
-            dd($tricks);
+            $trick->addComment($newComment);
             $em = $this->getDoctrine()->getManager();
             $em->persist($newComment);
             $em->flush();
@@ -176,7 +170,7 @@ class TricksController extends AbstractController
 
         return $this->render('tricks/oneTricks.html.twig', [
             'formNewComment' => $form->createView(),
-            'tricks' => $tricks
+            'tricks' => $trick
         ]);
     }
 
