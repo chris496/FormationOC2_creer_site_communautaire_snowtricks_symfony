@@ -10,8 +10,12 @@
                     <a class="nav-link active" aria-current="page" href="{{ path('home') }}">Accueil</a>
                     <a class="nav-link" href="{{ path('allTricks') }}">Tricks</a>
                     <a class="nav-link" href="{{ path('newTricks') }}">Création d'un tricks</a>
-                    <a class="nav-link" href="#!">Connexion</a>
-                    <a class="nav-link" href="#">Inscription</a>
+                    {% if app.user %}
+                        <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+                    {% else %}
+                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                        <a class="nav-link" href="{{ path('app_register') }}">Inscription</a>
+                    {% endif %}
                 </div>
             </div>
         </div>

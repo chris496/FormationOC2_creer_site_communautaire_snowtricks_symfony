@@ -14,17 +14,21 @@
                     </button>
                 </div>
             </div>
-            {% for media in tricks.medias %}  
-                <img src="{{ asset('/uploads/'~media.name) }}" class="card-img-top" alt="...">
+            {% for media in tricks.medias %}
+                {{ media.name }}
             {% endfor %}
             <div class="card-body">
                 <div class="row">
-                    <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
-                    <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
-                    <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
-                    <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
-                    <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
-                    <div class="col"><img src="../img/home2.jpg" class="card-img" alt="..."></div>
+                {% for media in tricks.medias %}  
+                    <div class="col"><img src="{{ asset('/uploads/'~media.name) }}" class="card-img-top" alt="...">
+                    <div class="border">
+                    <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+                    </div>
+                    {% endfor %}
                 </div>
                 <p class="card-text px-5 pt-4">{{ tricks.content }}</p>
                 <div class="row">
@@ -33,20 +37,15 @@
                         <div class="mr-2 badge bg-warning">{{ tricks.updatedat | date('d/m/Y H:i') }}</div>
                         <div class="badge bg-primary">{{ tricks.category.name }}</div>
                     </div>
-                </div>
-                <hr>
-                <form class="row d-flex justify-content-center">
-                    <div class="col-auto d-flex align-items-center">
-                    {{ form_start(formNewComment) }}
-                        <div class="me-3">
-                            {{ form_widget(formNewComment.content) }}
+                </div> 
+                {% if app.user %}
+                    <hr>
+                    <div class="row d-flex justify-content-center">
+                        <div class="col-auto d-flex align-items-center">
+                            {{ form(formNewComment) }}
                         </div>
-                        <div>
-                        {{ form_row(formNewComment.save) }}
-                        </div>
-                    {{ form_end(formNewComment) }}
                     </div>
-                </form>
+                {% endif %}
                 <hr>
                 <div class="d-flex flex-column align-items-center">
                     {% for comment in tricks.comments %}
