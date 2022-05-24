@@ -11,6 +11,7 @@ use App\Form\EditTricksType;
 use App\Form\CreateTricksType;
 use App\Form\CommentTricksType;
 use App\Repository\TricksRepository;
+use App\Repository\CommentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,12 +22,27 @@ class TricksController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function index(TricksRepository $repository): Response
+    public function index(TricksRepository $repository, Request $request): Response
     {
-        $allTricks = $repository->findAll();
+        $limit = 4;
+        $page = (int)$request->query->get("page", 1);
+        $allTricks = $repository->getPaginatedTricks($page, $limit);
+
         return $this->render('tricks/index.html.twig', [
             'allTricks' => $allTricks
         ]);
+    }
+
+    /**
+     * @Route("/paging/{page}", name="see_more")
+     */
+    public function pagingTricks(int $page, TricksRepository $repository, Request $request): Response
+    {
+        $limit = 4;
+        $page = (int)$request->query->get("page", $page);
+        $allTricks = $repository->getPaginatedTricks($page, $limit);
+
+        return $this->json($allTricks, 200, [], ['groups' => 'tricks:read']);
     }
 
     /**
@@ -151,7 +167,7 @@ class TricksController extends AbstractController
     /**
      * @Route("/tricks/{trick<\d+>}", name="oneTricks")
      */
-    public function oneTricks(Tricks $trick, Request $request)
+    public function oneTricks(Tricks $trick, Request $request, CommentRepository $repository)
     {
         $newComment = new Comment();
         $form = $this->createForm(CommentTricksType::class, $newComment);
@@ -167,12 +183,26 @@ class TricksController extends AbstractController
             $this->addFlash('success', 'Votre nouveau tricks est crée !!');
             return $this->redirectToRoute('home');
         }
+        $limit = 2;
+        $page = (int)$request->query->get("page", 1);
+        $allComments = $repository->getPaginatedComment($page, $limit);
 
         return $this->render('tricks/oneTricks.html.twig', [
             'formNewComment' => $form->createView(),
-            'tricks' => $trick
+            'tricks' => $trick,
+            'all' => $allComments
         ]);
     }
 
-    
+    /**
+     * @Route("/pagingComment/{page}", name="see_more_comment")
+     */
+    public function pagingComment(int $page, CommentRepository $repository, Request $request): Response
+    {
+        $limit = 2;
+        $page = (int)$request->query->get("page", $page);
+        $allComments = $repository->getPaginatedComment($page, $limit);
+        
+        return $this->json($allComments, 200, [], ['groups' => 'comment:read']);
+    }
 }

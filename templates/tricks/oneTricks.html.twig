@@ -6,7 +6,7 @@
     <div class="my-3 container d-flex justify-content-center">
         <div class="card">
             <div class="d-flex justify-content-between">
-                <h1>{{ tricks.title }}</h1>
+                <h1 class="">{{ tricks.title }}</h1>
                 <div class="border">
                     <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
                     <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks">
@@ -19,15 +19,15 @@
             {% endfor %}
             <div class="card-body">
                 <div class="row">
-                {% for media in tricks.medias %}  
-                    <div class="col"><img src="{{ asset('/uploads/'~media.name) }}" class="card-img-top" alt="...">
-                    <div class="border">
-                    <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
-                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                </div>
-                    </div>
+                    {% for media in tricks.medias %}  
+                    <div class="col"><img src="{{ asset('/uploads/'~media.name) }}" class="card-img-top w-25" alt="..."></div>
+                        <div class="border">
+                            <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                            <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    
                     {% endfor %}
                 </div>
                 <p class="card-text px-5 pt-4">{{ tricks.content }}</p>
@@ -47,8 +47,8 @@
                     </div>
                 {% endif %}
                 <hr>
-                <div class="d-flex flex-column align-items-center">
-                    {% for comment in tricks.comments %}
+                <div class="newComment d-flex flex-column align-items-center">
+                    {% for comment in tricks.comments|slice(0, 2) %}
                         <div class="d-flex align-items-center">
                             <div class="me-2 p-3">
                                 avatar
@@ -59,6 +59,13 @@
                         </div>
                     {% endfor %}
                 </div>
+
+                <div class="row mt-4 mb-4">
+                    <div class="col text-center">
+                        <button id="seeMore" class="btn btn-primary">Voir plus de commentaires</button>
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>
@@ -77,4 +84,40 @@
         </div>
     </div>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        const newComment = document.querySelector('.newComment')
+        const seeMore = document.querySelector('#seeMore')
+        let num = 2
+        
+        seeMore.addEventListener('click', (e)=>{
+            e.preventDefault()
+            const yep = num++
+            //let url = Routing.generate('see_more', {'page' : yep});
+            let url = '{{ path("see_more_comment", {'page': 'page'}) }}'; 
+            url = url.replace("page", yep);
+            fetch((url)).then(
+                    response => response.json()
+                ).then(
+                    data => {
+                        data.forEach(el => {
+                            let newp = document.createElement('p')
+                            newp.innerHTML = `
+                                <div class="d-flex align-items-center">
+                                    <div class="me-2 p-3">
+                                        avatar
+                                    </div>
+                                     <div class="mb-2 p-3 border shadow">
+                                        ${el.content}
+                                    </div>
+                                </div>`
+                            newComment.append(newp);
+                        })
+                    }
+                )
+        })
+        
+    </script>
 {% endblock %}
