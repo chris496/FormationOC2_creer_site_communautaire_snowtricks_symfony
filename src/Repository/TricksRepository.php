@@ -46,7 +46,7 @@ class TricksRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return void
+     * @return array
      */
     public function getPaginatedTricks($page, $limit)
     {
@@ -54,6 +54,23 @@ class TricksRepository extends ServiceEntityRepository
             ->orderBy('t.createdAt')
             ->setFirstResult(($page * $limit) - $limit)
             ->setMaxResults($limit)
+        ;
+
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * @return array
+     */
+    public function getMediasTest($id)
+    {
+
+        /*SELECT `tricks`.`id`, `media`.* FROM `tricks` LEFT JOIN `media` ON `media`.`tricks_id` = `tricks`.`id`;*/
+        $query = $this->createQueryBuilder('t')
+            ->andWhere('t.id = :id')
+            ->setParameter('id', $id)
+            ->orderBy("t.title", "ASC")
+            ->join('t.medias', 'm')->addSelect('m')
         ;
 
         return $query->getQuery()->getResult();

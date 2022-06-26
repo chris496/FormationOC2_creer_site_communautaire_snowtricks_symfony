@@ -70,10 +70,16 @@ class Tricks
      */
     private $category;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Media::class, mappedBy="tricksForVideo",cascade={"persist"})
+     */
+    private $urls;
+
     public function __construct()
     {
         $this->medias = new ArrayCollection();
         $this->comments = new ArrayCollection();
+        $this->urls = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -221,6 +227,36 @@ class Tricks
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
+    public function getUrls(): Collection
+    {
+        return $this->urls;
+    }
+
+    public function addUrl(Media $url): self
+    {
+        if (!$this->urls->contains($url)) {
+            $this->urls[] = $url;
+            $url->setTricksForVideo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUrl(Media $url): self
+    {
+        if ($this->urls->removeElement($url)) {
+            // set the owning side to null (unless already changed)
+            if ($url->getTricksForVideo() === $this) {
+                $url->setTricksForVideo(null);
+            }
+        }
 
         return $this;
     }

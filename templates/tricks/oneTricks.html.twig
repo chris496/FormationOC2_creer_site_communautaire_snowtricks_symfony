@@ -3,69 +3,83 @@
 {% block title %}Hello TricksController!{% endblock %}
 
 {% block body %}
-    <div class="my-3 container d-flex justify-content-center">
-        <div class="card">
-            <div class="d-flex justify-content-between">
-                <h1 class="">{{ tricks.title }}</h1>
-                <div class="border">
+    <div class="my-3 container">
+        <div class="card border-primary rounded my-5">
+            <div class="card_header">
+                <h1 class="title_center">
+                    {{ tricks.title }}
+                </h1>
+                <div class="buttons">
                     <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
                     <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
                 </div>
+                    <!--<img class="w-100" src="../img/home2.jpg" alt="">-->
+                {% for media in tricks.medias %} 
+                    {% if media.favorite == 1 %}
+                        <img src="{{ asset('/uploads/'~media.name) }}" width="100%" alt="">
+                    {% endif %}
+                {% endfor %}
             </div>
-            {% for media in tricks.medias %}
-                {{ media.name }}
-            {% endfor %}
+
+
             <div class="card-body">
-                <div class="row">
-                    {% for media in tricks.medias %}  
-                    <div class="col"><img src="{{ asset('/uploads/'~media.name) }}" class="card-img-top w-25" alt="..."></div>
-                        <div class="border">
-                            <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
-                            <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
+                {% for media in tricks.medias %}  
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                            <img src="{{ asset('/uploads/'~media.name) }}" width="100%" alt="">
+                            <div class="border">
+                                <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                                <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                            </div>
                         </div>
-                    
-                    {% endfor %}
+                    </div>    
+                {% endfor %}
+                {% for url in tricks.urls %}
+                <div>
+                    <h1>{{ url.url }}</h1>
+                    <embed type="video/webm" src="{{ video(url.url) }}" width="250" height="200">
                 </div>
-                <p class="card-text px-5 pt-4">{{ tricks.content }}</p>
-                <div class="row">
+                {% endfor %}
+                <p class="p-5">{{ tricks.content }}</p>
+                <div class="mb-4 row">
                     <div class="col d-flex justify-content-center">
-                        <div class="mr-2 badge bg-success">{{ tricks.createdat | date('d/m/Y H:i') }}</div>
-                        <div class="mr-2 badge bg-warning">{{ tricks.updatedat | date('d/m/Y H:i') }}</div>
+                        <div class="me-2 badge bg-success">{{ tricks.createdat | date('d/m/Y H:i') }}</div>
+                        <div class="me-2 badge bg-warning">{{ tricks.updatedat | date('d/m/Y H:i') }}</div>
                         <div class="badge bg-primary">{{ tricks.category.name }}</div>
                     </div>
                 </div> 
                 {% if app.user %}
-                    <hr>
-                    <div class="row d-flex justify-content-center">
-                        <div class="col-auto d-flex align-items-center">
-                            {{ form(formNewComment) }}
-                        </div>
+                <hr>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-auto d-flex align-items-center">
+                        {{ form(formNewComment) }}
                     </div>
+                </div>
                 {% endif %}
                 <hr>
-                <div class="newComment d-flex flex-column align-items-center">
-                    {% for comment in tricks.comments|slice(0, 2) %}
-                        <div class="d-flex align-items-center">
-                            <div class="me-2 p-3">
-                                avatar
+                <div class="mt-5 d-flex justify-content-center">
+                    <div class="newComment d-flex flex-column align-items-start">
+                        {% for comment in tricks.comments|slice(0, 4) %}
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 p-3">
+                                    avatar
+                                </div>
+                                <div class="mb-2 p-3 border shadow">
+                                    {{ comment.content }}
+                                </div>
                             </div>
-                            <div class="mb-2 p-3 border shadow">
-                                {{ comment.content }}
-                            </div>
-                        </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
-
-                <div class="row mt-4 mb-4">
+                <div class="row mt-5 mb-2">
                     <div class="col text-center">
                         <button id="seeMore" class="btn btn-primary">Voir plus de commentaires</button>
                     </div>
-                </div>
-                
+                </div>   
             </div>
         </div>
     </div>
@@ -84,7 +98,31 @@
         </div>
     </div>
     </div>
+
+    <!--<div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                            <img src="https://source.unsplash.com/300x300/?perth,australia" class="d-block w-100" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                            <img src="https://source.unsplash.com/300x300/?fremantle,australia" class="d-block w-100" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                            <img src="https://source.unsplash.com/300x300/?west-australia" class="d-block w-100" alt="...">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                        </div>-->
 {% endblock %}
+
+
 
 {% block javascripts %}
     <script>
@@ -96,7 +134,7 @@
             e.preventDefault()
             const yep = num++
             //let url = Routing.generate('see_more', {'page' : yep});
-            let url = '{{ path("see_more_comment", {'page': 'page'}) }}'; 
+            let url = '{{ path("see_more_comment", {'slug' : 'slug', 'page': 'page'}) }}'; 
             url = url.replace("page", yep);
             fetch((url)).then(
                     response => response.json()
@@ -120,4 +158,30 @@
         })
         
     </script>
+
+  <script>
+    // Instantiate the Bootstrap carousel
+$('.multi-item-carousel').carousel({
+  interval: false
+});
+
+// for every slide in carousel, copy the next slide's item in the slide.
+// Do the same for the next, next item.
+$('.multi-item-carousel .item').each(function(){
+  var next = $(this).next();
+  if (!next.length) {
+    next = $(this).siblings(':first');
+  }
+  next.children(':first-child').clone().appendTo($(this));
+  
+  if (next.next().length>0) {
+    next.next().children(':first-child').clone().appendTo($(this));
+  } else {
+  	$(this).siblings(':first').children(':first-child').clone().appendTo($(this));
+  }
+});
+ </script>
 {% endblock %}
+
+
+

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Media;
+use App\Entity\Tricks;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -45,6 +46,16 @@ class MediaRepository extends ServiceEntityRepository
         }
     }
 
+    public function findOneFavoriteMediaByTrick(Tricks $trick): ?Media
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.tricks = :tricks')
+            ->setParameter('tricks', $trick->getId())
+            ->andWhere('m.favorite = true')
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
     // /**
     //  * @return Media[] Returns an array of Media objects
     //  */

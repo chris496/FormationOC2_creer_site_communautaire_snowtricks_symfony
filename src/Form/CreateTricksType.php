@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -76,6 +77,12 @@ class CreateTricksType extends AbstractType
                     'class' => 'input-group',
                 ]
             ])
+            ->add('urls', UrlType::class,[
+                'mapped' => false,
+                'required' => false,
+                'row_attr' => [
+                    'class' => 'input-group',
+                ]])
             ->add('save', SubmitType::class, [
                 'label' => "Valider"
             ])

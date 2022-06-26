@@ -28,6 +28,27 @@ class Media
      */
     private $tricks;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $favorite;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $url;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Tricks::class, inversedBy="urls")
+     * @ORM\JoinColumn(onDelete="CASCADE") 
+     */
+    private $tricksForVideo;
+
+    /**
+     * @ORM\Column(type="string", length=5, nullable=true)
+     */
+    private $type;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -53,6 +74,54 @@ class Media
     public function setTricks(?Tricks $tricks): self
     {
         $this->tricks = $tricks;
+
+        return $this;
+    }
+
+    public function getFavorite(): ?bool
+    {
+        return $this->favorite;
+    }
+
+    public function setFavorite(?bool $favorite): self
+    {
+        $this->favorite = $favorite;
+
+        return $this;
+    }
+
+    public function getUrl(): ?string
+    {
+        return $this->url;
+    }
+
+    public function setUrl(?string $url): self
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    public function getTricksForVideo(): ?Tricks
+    {
+        return $this->tricksForVideo;
+    }
+
+    public function setTricksForVideo(?Tricks $tricksForVideo): self
+    {
+        $this->tricksForVideo = $tricksForVideo;
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }
