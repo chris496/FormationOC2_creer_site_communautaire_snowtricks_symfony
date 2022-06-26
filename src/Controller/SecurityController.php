@@ -75,7 +75,7 @@ class SecurityController extends AbstractController
             $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
             $email = (new TemplatedEmail())
-                ->from('administrateur@p2.christophedumas1.fr')
+                ->from('formationoc@christophedumas1.fr')
                 ->to($user->getEmail())
                 ->subject('Reset !')
 

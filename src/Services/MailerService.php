@@ -20,7 +20,7 @@ class MailerService
     public function sendMail($email, $token)
     {
         $email = (new TemplatedEmail())
-                ->from('administrateur@p2.christophedumas1.fr')
+                ->from('formationoc@christophedumas1.fr')
                 ->to(new Address($email))
                 ->subject('Thanks for signing up!')
 
