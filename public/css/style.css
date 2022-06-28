@@ -59,6 +59,25 @@
     }
   }
 
+/* mail */
+
+.main_mail{
+  text-align: center;
+}
+
+.link_mail{
+  text-decoration: none;
+  background-color: cornflowerblue;
+  box-shadow: 1px 1px 2px rgb(0, 0, 0);
+  border-radius: 2px;
+  padding: 4px;
+  color: white;
+}
+
+.link_mail:hover{
+  color: black;
+  background-color: rgb(150, 181, 238);
+}
 
 
   

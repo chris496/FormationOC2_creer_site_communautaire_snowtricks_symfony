@@ -58,7 +58,7 @@ class TricksController extends AbstractController
                 'title' => $tricks->getTitle(),
                 'content' => $tricks->getContent(),
                 'slug' => $tricks->getSlug(),
-                'medias' => $media ?$media->getName():"/indie_grab.jpg",
+                'medias' => $media ?$media->getName():"/default.jpg",
                 'tricks' => $this->generateUrl('oneTricks', ['slug' => $tricks->getSlug()]),
                 'editTricks' => $this->generateUrl('editTricks', ['id' => $tricks->getId()]),
                 'delete' => $tricks->getId()

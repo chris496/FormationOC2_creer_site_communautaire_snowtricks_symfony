@@ -58,7 +58,7 @@ class TricksFixtures extends Fixture
         {
             $tricks = new Tricks();
             $img = new Media();
-            $img->setName('/indie_grab.jpg');    
+            $img->setName('/default.jpg');    
             $tricks->setTitle($test)
                 ->setContent($faker->text(40))
                 ->setCreatedAt(new DateTimeImmutable())
