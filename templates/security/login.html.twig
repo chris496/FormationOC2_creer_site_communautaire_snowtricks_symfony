@@ -5,7 +5,7 @@
 {% block body %}
 <form method="post">
     {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        <div class="text-center alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
     {% if app.user %}
@@ -14,31 +14,38 @@
         </div>
     {% endif %}
 
-<div class="container-fluid">
-    <div class="row d-flex justify-content-center">
-        <div class="col-lg-5 m-5">
-            <h3 class="text-center mb-4">Connexion</h3>
-            <div class="border p-4">
-                <div class="mb-3">
-                    <label for="inputEmail">Email :</label>
-                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-                </div>
-                <div class="mb-3">
-                    <label for="inputPassword">Mot de passe :</label>
-                    <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
-                </div>
-                <input type="hidden" name="_csrf_token"
-                value="{{ csrf_token('authenticate') }}">
-                <div class="text-end">
-                    <button class="btn btn-lg btn-primary" type="submit">
-                        Valider
-                    </button>
-                </div>
-                <a href="{{ path('forget_password') }}">Mot de passe oublié</a>
-            </div>                
+    <div class="container-fluid">
+        
+            {% for message in app.flashes('success') %}
+                <p class="text-center alert alert-success" role="alert">
+                    {{ message }}
+                </p>
+            {% endfor %}
+        
+        <div class="row d-flex justify-content-center">
+            <div class="col-lg-5 m-5">
+                <h3 class="text-center mb-4">Connexion</h3>
+                <div class="border p-4">
+                    <div class="mb-3">
+                        <label for="inputEmail">Email :</label>
+                        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputPassword">Mot de passe :</label>
+                        <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                    </div>
+                    <input type="hidden" name="_csrf_token"
+                    value="{{ csrf_token('authenticate') }}">
+                    <div class="text-end">
+                        <button class="btn btn-lg btn-primary" type="submit">
+                            Valider
+                        </button>
+                    </div>
+                    <a href="{{ path('forget_password') }}">Mot de passe oublié</a>
+                </div>                
+            </div>
         </div>
     </div>
-</div>
 
     {#
         Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.

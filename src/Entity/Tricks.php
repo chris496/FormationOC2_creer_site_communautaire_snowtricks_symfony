@@ -75,6 +75,11 @@ class Tricks
      */
     private $urls;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Media::class, mappedBy="favorite",cascade={"persist"})
+     */
+    private $favorite;
+
     public function __construct()
     {
         $this->medias = new ArrayCollection();
@@ -257,6 +262,26 @@ class Tricks
                 $url->setTricksForVideo(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Get the value of favorite
+     */ 
+    public function getFavorite()
+    {
+        return $this->favorite;
+    }
+
+    /**
+     * Set the value of favorite
+     *
+     * @return  self
+     */ 
+    public function setFavorite($favorite)
+    {
+        $this->favorite = $favorite;
 
         return $this;
     }

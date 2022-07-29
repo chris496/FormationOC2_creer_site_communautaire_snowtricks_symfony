@@ -48,12 +48,6 @@ class CreateTricksType extends AbstractType
                     'placeholder' => 'Description...'
                 ]
             ])
-            ->add('user', EntityType::class, [
-                'required' => true,
-                'label' => 'Choisir un user',
-                'class' => User::class,
-                'choice_label' => 'id'
-              ])
             ->add('category', EntityType::class, [
                 'required' => true,
                 'label' => 'Choisir un groupe :',

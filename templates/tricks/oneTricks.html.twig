@@ -109,8 +109,12 @@
             <h5>Voulez-vous vraiment supprimer ce média ?</h5>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-            <a href="{{ path('deleteMedia', {'id' : allTrick.id}) }}" class="btn btn-danger">Confirmer</a>
+        {% for m in tricks.medias %}
+                                <div class="me-2 d-flex flex-column align-items-center">
+                                    <a href="{{ path('editDeleteMedia', {'id' : m.id}) }}">Supprimer</a>
+                                </div>
+                            {% endfor %}
+            
         </div>
         </div>
     </div>

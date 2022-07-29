@@ -10,13 +10,14 @@ use App\Entity\Comment;
 use App\Form\EditTricksType;
 use App\Form\CreateTricksType;
 use App\Form\CommentTricksType;
+use App\Repository\MediaRepository;
 use App\Repository\TricksRepository;
 use App\Repository\CommentRepository;
-use App\Repository\MediaRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TricksController extends AbstractController
@@ -80,6 +81,19 @@ class TricksController extends AbstractController
     }
 
     /**
+     * @Route("/test", name="test")
+     */
+    public function test(): Response
+    {
+        $demo = $this->getParameter('MAILER');
+        dd($demo);
+        
+        return $this->render('test/index.html.twig', [
+            'controller_name' => 'TestController',
+        ]);
+    }
+
+    /**
      * @Route("/newTricks", name="newTricks")
      */
     public function newTricks(Request $request, SluggerInterface $slugger)
@@ -90,6 +104,7 @@ class TricksController extends AbstractController
         
         if($form->isSubmitted() && $form->isValid()){
             $images = $form->get('medias')->getData();
+            
             $urlVideo = $form->get('urls')->getData();
             foreach($images as $image){
                 $fichier = md5(uniqid()).'.'.$image->guessExtension();
@@ -99,10 +114,8 @@ class TricksController extends AbstractController
                 );
                 $img = new Media();
                 $img->setName($fichier);
-                $img->setFavorite(1);
                 $newTricks->addMedia($img);
             }
-
             $video = new Media();
             $video->setName('video');
             $video->setUrl($urlVideo);
@@ -111,7 +124,8 @@ class TricksController extends AbstractController
             //dd($slug);
             $newTricks->addUrl($video)
                     ->setSlug(strtolower($slugger->slug($form->get('title')->getData())))
-                    ->setCreatedAt(new DateTimeImmutable());
+                    ->setCreatedAt(new DateTimeImmutable())
+                    ->setUser($this->getUser());
             $em = $this->getDoctrine()->getManager();
             $em->persist($newTricks);
             $em->flush();

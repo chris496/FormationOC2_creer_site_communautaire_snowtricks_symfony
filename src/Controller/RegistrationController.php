@@ -41,8 +41,8 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
             $mailer->sendMail($user->getEmail(), $user->getActivationToken());
             // do anything else you need here, like send an email
-              
-            return $this->redirectToRoute('home');
+            $this->addFlash('success', 'Merci d\'activer votre nouveau compte par mail !!');
+            return $this->redirectToRoute('app_login');
             /*return $userAuthenticator->authenticateUser(
                 $user,
                 $authenticator,
@@ -72,8 +72,7 @@ class RegistrationController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        $this->addFlash('message', 'Utilisateur activé avec succès');
-
-        return $this->redirectToRoute('home');
+        $this->addFlash('success', 'Votre compte est activée !!');
+        return $this->redirectToRoute('app_login');
     }
 }

@@ -14,6 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class EditTricksType extends AbstractType
@@ -70,6 +71,12 @@ class EditTricksType extends AbstractType
                     'class' => 'input-group',
                 ]
             ])
+            ->add('urls', CheckboxType::class,[
+                'mapped' => false,
+                'required' => false,
+                'row_attr' => [
+                    'class' => 'checked',
+                ]])
             ->add('save', SubmitType::class, [
                 'label' => "Valider"
             ])

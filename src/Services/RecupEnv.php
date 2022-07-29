@@ -4,15 +4,15 @@ namespace App\Service;
 
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class DemoService
+class RecupEnv
 {
-    public function __construct(ParameterBagInterface $parameterBag)
-    {
-        $this->parameterBag = $parameterBag;
+    public function __construct(
+        $demo
+    ) {
     }
     
     public function getDemo(): string
     {
-        return $this->parameterBag->get('DEMO');
+        return $this->demo;
     }
 }

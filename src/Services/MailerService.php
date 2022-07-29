@@ -22,7 +22,7 @@ class MailerService
         $email = (new TemplatedEmail())
                 ->from('formationoc@christophedumas1.fr')
                 ->to(new Address($email))
-                ->subject('Thanks for signing up!')
+                ->subject('Merci pour votre inscription !')
 
             // path of the Twig template to render
                 ->htmlTemplate('emails/registration.html.twig')

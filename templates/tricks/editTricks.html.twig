@@ -22,13 +22,22 @@
                     <div class="mb-3">
                         {{ form_row(formEditTricks.medias) }}
                     </div>
+                     
                     <div>
                         <h5>Image(s) et/ou video(s) :</h5>
                         <div class="mb-3 d-flex">
                             {% for m in tricks.medias %}
                                 <div class="me-2 d-flex flex-column align-items-center">
                                     <img src="{{ asset('/uploads/'~m.name) }}" alt="" width="100">
-                                    <a href="{{ path('editDeleteMedia', {'id' : m.id}) }}">Supprimer</a>
+                                    <div class="d-flex">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                                            <label class="form-check-label" for="flexSwitchCheckDefault"><strong>Star</strong></label>
+                                        </div>  
+                                        <div class="mx-1">|</div>
+                                        <div>
+                                        <a class="delete" href="{{ path('editDeleteMedia', {'id' : m.id}) }}"><i class="fa-solid fa-trash-can"></i></a></div>
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>
@@ -36,9 +45,74 @@
                     <div class="text-end">
                         {{ form_row(formEditTricks.save) }}
                     </div>
-                        {{ form_end(formEditTricks) }}  
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="my-3 container">
+        <div class="card border-primary rounded my-5">
+            <div class="card_header">
+                <h1 class="title_center">
+                    
+                </h1>
+          
+                <div class="buttons">
+                    <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+        
+                    <!--<img class="w-100" src="../img/home2.jpg" alt="">-->
+            
+              
+            </div>
+
+
+            <div class="card-body">
+               
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4 col-lg-4 col-xl">
+                            <div class="d-flex justify-content-start">
+                                <div class="d-flex flex-column">
+                                    <img class="me-2" src="" width="300px" alt="">
+                                   
+                                    <div class="border">
+                                        <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                
+                                </div>
+                                <div class="d-flex flex-column">
+                                 
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+              
+                <p class="p-5">title</p>
+                <div class="mb-4 row">
+                    <div class="col d-flex justify-content-center">
+                        <div class="me-2 badge bg-success">gfgdfgdfg</div>
+                        <div class="me-2 badge bg-warning">dfgdfgfd</div>
+                        <div class="badge bg-primary">dfgdfgdfgdf</div>
+                    </div>
+                </div> 
+                
+                <hr>
+                <div class="mt-5 d-flex justify-content-center">
+                    <div class="newComment d-flex flex-column align-items-start">
+                       
                     </div>
                 </div>
+                <div class="row mt-5 mb-2">
+                    <div class="col text-center">
+                        <button id="seeMore" class="btn btn-primary">Voir plus de commentaires</button>
+                    </div>
+                </div>   
             </div>
         </div>
     </div>
