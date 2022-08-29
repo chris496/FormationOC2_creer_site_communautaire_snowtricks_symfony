@@ -83,6 +83,10 @@
   cursor: pointer;
 }
 
+.test {
+  display: none !important;
+}
+
 /*<div style="position:relative; height:400px">
    <div style="position:absolute;z-index:1">
       <img src="images/greenhouse.jpg">
@@ -91,3 +95,21 @@
       <center><b>Ma maison...</b></center>
     </div> 
 </div>*/
+
+@media (max-width: 768px) {
+  nav{
+    background-color: #e3f2fd;
+    border-top: 1px black solid;
+    display: none !important;
+  }
+
+  .test {  
+    position: absolute; 
+    bottom: 0px;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    z-index: 1;
+    display: flex !important;
+  }
+}

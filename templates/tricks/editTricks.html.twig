@@ -3,7 +3,7 @@
 {% block title %}Modifie un tricks !{% endblock %}
 
 {% block body %}
-    <div class="container-fluid">
+    <!--<div class="container-fluid">
         <div class="row d-flex justify-content-center">
             <div class="col-lg-5 m-5">
                 <h3 class="text-center mb-4">Modification du tricks</h3>
@@ -14,7 +14,7 @@
                         {{ form_errors(formEditTricks.title) }}
                     </div>
                     <div class="mb-3">
-                        {{ form_widget(formEditTricks.content) }}
+                        
                     </div>
                     <div class="mb-3">
                         {{ form_row(formEditTricks.category) }}
@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 
     <div class="my-3 container">
         <div class="card border-primary rounded my-5">
@@ -93,12 +93,14 @@
                         </div>
                     </div>    
               
-                <p class="p-5">title</p>
+                <div class="mb-3">
+                        {{ form_widget(formEditTricks.content) }}
+                    </div>
                 <div class="mb-4 row">
                     <div class="col d-flex justify-content-center">
-                        <div class="me-2 badge bg-success">gfgdfgdfg</div>
-                        <div class="me-2 badge bg-warning">dfgdfgfd</div>
-                        <div class="badge bg-primary">dfgdfgdfgdf</div>
+                        <div class="me-2 badge bg-success">{{ tricks.createdat | date('d/m/Y H:i') }}</div>
+                        <div class="me-2 badge bg-warning">{{ tricks.updatedat | date('d/m/Y H:i') }}</div>
+                        <div class="badge bg-primary">{{ tricks.category.name }}</div>
                     </div>
                 </div> 
                 
