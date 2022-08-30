@@ -30,7 +30,6 @@ class TricksController extends AbstractController
         $limit = 15;
         $page = (int)$request->query->get("page", 1);
         $allTricks = $repository->getPaginatedTricks($page, $limit);
-//dd($allTricks);
         return $this->render('tricks/index.html.twig', [
             'allTricks' => $allTricks
         ]);
