@@ -5,6 +5,138 @@
 {% block body %}
     <div class="my-3 container">
         <div class="card border-primary rounded my-5">
+
+            <div class="card_header">
+                <h1 class="title_center">
+                    {{ tricks.title }}
+                </h1>
+                {% if app.user %}
+                <div class="buttons">
+                    <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+                {% endif %}
+
+                {% for media in tricks.medias %} 
+                    {% if media.favorite == 1 %}
+                        <img class="w-100" src="{{ asset('/uploads/'~media.name) }}" width="100%" alt="">
+                    {% else %}
+                        <img class="w-100" src="{{ asset('/uploads/default.jpg') }}" width="100%" alt="">
+                    {% endif %}
+                {% endfor %}       
+            </div>
+
+            <div class="card-body">
+                <div class="row test_body">
+                    <div class="swiper">
+                        <div class="swiper-wrapper">
+                        {% for media in tricks.medias %}  
+                            <div class="swiper-slide">
+                                <div class="d-flex flex-column">
+                                    <img class="diapo me-2" src="{{ asset('/uploads/'~media.name) }}" alt="">   
+                                    {% if app.user %}                                 
+                                    <div class="d-flex justify-content-around bord me-2">
+                                        <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% for url in tricks.urls %}
+                            <div class="swiper-slide">
+                                <div class="d-flex flex-column">
+                                    <embed class="diapo me-2" type="video/webm" src="{{ video(url.url) }}">
+                                    {% if app.user %}                                 
+                                    <div class="d-flex justify-content-around bord me-2">
+                                        <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        {% endfor %}
+                        </div>
+                        <!-- If we need pagination -->
+                        <div class="swiper-pagination"></div>
+                    
+                        <!-- If we need navigation buttons -->
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl">
+                        
+                    </div>
+                </div> 
+                <hr> 
+                <div class="row">
+                    <p class="p-5">{{ tricks.content }}</p>
+                </div>  
+                <div class="mb-4 row justify-content-center">
+                    <div class="col-auto">
+                        <div class="me-2 badge bg-success">{{ tricks.createdat | date('d/m/Y H:i') }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="me-2 badge bg-warning">{{ tricks.updatedat | date('d/m/Y H:i') }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="badge bg-primary">{{ tricks.category.name }}</div>
+                    </div>
+                </div> 
+                <hr>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-auto d-flex align-items-center">
+                        {{ form(formNewComment) }}
+                    </div>
+                </div>
+                <hr>
+                <div class="mt-5 d-flex justify-content-center">
+                    <div class="newComment d-flex flex-column align-items-start">
+                        <div class="d-flex align-items-center">
+                            <div class="me-2 p-3">
+                                <img src="wire.png" class="avatar card-img-top img-fluid rounded mb-4 mb-lg-0" alt="picture">
+                            </div>
+                            <div class="mb-2 p-3 border shadow">
+                                /*commentcontent*/
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5 mb-2">
+                    <div class="col text-center">
+                        <button id="seeMore" class="btn btn-primary">Voir plus de commentaires</button>
+                    </div>
+                </div>   
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="my-3 container">
+        <div class="card border-primary rounded my-5">
             <div class="card_header">
                 <h1 class="title_center">
                     {{ tricks.title }}
@@ -146,6 +278,39 @@
 
 
 {% block javascripts %}
+<script>
+const swiper = new Swiper('.swiper', {
+    // Optional parameters
+    loop: true,
+    slidesPerView: 6,
+    slidesPerColumn: 2,
+    spaceBetween: 30,
+    navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    breakpoints: {
+        640: {
+          slidesPerView: 1,
+          spaceBetween: 20,
+        },
+        768: {
+          slidesPerView: 2,
+          spaceBetween: 40,
+        },
+        1024: {
+          slidesPerView: 4,
+          spaceBetween: 30,
+        },
+        1600: {
+            slidesPerView: 6,
+            spaceBetween: 30,
+          },
+    },
+  });
+
+</script>
+
     <script>
         const newComment = document.querySelector('.newComment')
         const seeMore = document.querySelector('#seeMore')
