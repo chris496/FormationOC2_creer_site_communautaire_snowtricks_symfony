@@ -105,13 +105,20 @@ class TricksController extends AbstractController
             $images = $form->get('medias')->getData();
             
             $urlVideo = $form->get('urls')->getData();
+            $i = 0;
             foreach($images as $image){
+
                 $fichier = md5(uniqid()).'.'.$image->guessExtension();
                 $image->move(
                     $this->getParameter('images_directory'),
                     $fichier
                 );
                 $img = new Media();
+                if($i == 0){
+                    $img->setFavorite(true);
+                    dump($fichier);
+                }
+                $i++;
                 $img->setName($fichier);
                 $newTricks->addMedia($img);
             }
@@ -214,9 +221,10 @@ class TricksController extends AbstractController
     /**
      * @Route("/tricks/{slug}", name="oneTricks")
      */
-    public function oneTricks(string $slug, Request $request, CommentRepository $repository, TricksRepository $tricksRepository)
+    public function oneTricks(string $slug, Request $request, CommentRepository $repository, TricksRepository $tricksRepository, MediaRepository $mediaRepository)
     {
         $trick = $tricksRepository->findOneBy(['slug' => $slug]);
+        $favorite = $mediaRepository->findOneBy(['tricks' => $trick, 'favorite' => 1]);
         $newComment = new Comment();
         $form = $this->createForm(CommentTricksType::class, $newComment);
         $form->handleRequest($request);
@@ -238,7 +246,8 @@ class TricksController extends AbstractController
         return $this->render('tricks/oneTricks.html.twig', [
             'formNewComment' => $form->createView(),
             'tricks' => $trick,
-            'all' => $allComments
+            'all' => $allComments,
+            'favorite' => $favorite
         ]);
     }
 

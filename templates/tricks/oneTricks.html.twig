@@ -10,13 +10,13 @@
                 <h1 class="title_center">
                     {{ tricks.title }}
                 </h1>
-                {% for media in tricks.medias %} 
-                    {% if media.favorite == 1 %}
-                        <img class="w-100" src="{{ asset('/uploads/'~media.name) }}" width="100%" alt="">
-                    {% elseif media.favorite is empty %}
-                        <img class="w-100" src="{{ asset('/uploads/default.png') }}" width="100%" alt="">
+                
+                    {% if favorite %}
+                        <img class="w-100" src="{{ asset('/uploads/'~favorite.name) }}" width="100%" alt="">
+                    {% else %}
+                        <img class="w-100" src="{{ asset('/uploads/default.jpg') }}" width="100%" alt="">
                     {% endif %}
-                {% endfor %} 
+                 
                 {% if app.user %}
                 <div class="buttons">
                     <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
