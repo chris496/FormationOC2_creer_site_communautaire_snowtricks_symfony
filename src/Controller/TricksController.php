@@ -247,7 +247,7 @@ class TricksController extends AbstractController
      */
     public function pagingComment(string $slug, int $page, CommentRepository $repository, Request $request, TricksRepository $tricksRepository): Response
     {
-        $trick = $tricksRepository->findOneBy(['id' => $slug]);
+        $trick = $tricksRepository->findOneBy(['slug' => $slug]);
         dd($trick);
         $limit = 5;
         $page = (int)$request->query->get("page", $page);

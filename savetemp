@@ -1,0 +1,97 @@
+ <div class="my-3 container">
+        <div class="card border-primary rounded my-5">
+            <div class="card_header">
+                <h1 class="title_center">
+                    {{ tricks.title }}
+                </h1>
+                {% if app.user %}
+                <div class="buttons">
+                    <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+                {% endif %}
+                    <!--<img class="w-100" src="../img/home2.jpg" alt="">-->
+                {% for media in tricks.medias %} 
+                    {% if media.favorite == 1 %}
+                        <img src="{{ asset('/uploads/'~media.name) }}" width="100%" alt="">
+                    {% else %}
+                        <img src="{{ asset('/uploads/default.jpg') }}" width="100%" alt="">
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+
+            <div class="card-body">
+                {% for media in tricks.medias %}  
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4 col-lg-4 col-xl">
+                            <div class="d-flex justify-content-start">
+                                <div class="d-flex flex-column">
+                                    <img class="me-2" src="{{ asset('/uploads/'~media.name) }}" width="300px" alt="">
+                                    {% if app.user %}
+                                    <div class="border">
+                                        <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="d-flex flex-column">
+                                    {% for url in tricks.urls %}
+                                        <embed class="me-2" type="video/webm" src="{{ video(url.url) }}" width="300px">
+                                        {% if app.user %}
+                                        <div class="border">
+                                            <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                                            <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>    
+                {% endfor %}
+                <p class="p-5">{{ tricks.content }}</p>
+                <div class="mb-4 row">
+                    <div class="col d-flex justify-content-center">
+                        <div class="me-2 badge bg-success">{{ tricks.createdat | date('d/m/Y H:i') }}</div>
+                        <div class="me-2 badge bg-warning">{{ tricks.updatedat | date('d/m/Y H:i') }}</div>
+                        <div class="badge bg-primary">{{ tricks.category.name }}</div>
+                    </div>
+                </div> 
+                {% if app.user %}
+                <hr>
+                <div class="row d-flex justify-content-center">
+                    <div class="col-auto d-flex align-items-center">
+                        {{ form(formNewComment) }}
+                    </div>
+                </div>
+                {% endif %}
+                <hr>
+                <div class="mt-5 d-flex justify-content-center">
+                    <div class="newComment d-flex flex-column align-items-start">
+                        {% for comment in tricks.comments|slice(0, 4) %}
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 p-3">
+                                    avatar
+                                </div>
+                                <div class="mb-2 p-3 border shadow">
+                                    {{ comment.content }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="row mt-5 mb-2">
+                    <div class="col text-center">
+                        <button id="seeMore" class="btn btn-primary">Voir plus de commentaires</button>
+                    </div>
+                </div>   
+            </div>
+        </div>
+    </div>
