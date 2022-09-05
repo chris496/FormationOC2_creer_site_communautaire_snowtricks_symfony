@@ -24,7 +24,7 @@
                             {% if allTrick.medias is not empty %}
                                 {% for media in allTrick.medias %} 
                                     {% if media.favorite == 1 %}
-                                        <img src="{{ asset('/uploads/'~media.name) }}" class="card-img-top" alt="...">
+                                        <img src="{{ asset('/uploads/'~media.name) }}" class="himg card-img-top" alt="...">
                                     {% endif %}
                                 {% endfor %}                       
                             {% else %}

@@ -19,7 +19,9 @@
                  
                 {% if app.user %}
                 <div class="buttons">
-                    <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#editMedia">
+                        <i class="fa-solid fa-pencil"></i>
+                    </button>
                     <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
@@ -83,21 +85,24 @@
                 <hr>
                 <div class="mt-5 d-flex justify-content-center">
                     <div class="newComment d-flex flex-column align-items-start">
-                        <div class="d-flex align-items-center">
-                        {% for comment in tricks.comments %}
-                            <div class="me-2 p-3">
-                                <img src="wire.png" class="avatar card-img-top img-fluid rounded mb-4 mb-lg-0" alt="picture">
+                        <div>
+                            {% for allcomment in allcomments %}
+                            <div class="d-flex align-items-center">
+                                <div class="me-2 p-3">
+                                    <img src="/img/avatar.png" class="avatar card-img-top img-fluid rounded mb-4 mb-lg-0" alt="picture">
+                                </div>
+                                <div class="mb-2 p-3 border shadow">
+                                    {{ allcomment.content }}
+                                </div>
                             </div>
-                            <div class="mb-2 p-3 border shadow">
-                                {{ comment.content }}
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
                 <div class="row mt-5 mb-2">
                     <div class="col text-center">
                         <button id="seeMore" class="btn btn-primary">Voir plus de commentaires</button>
+                        <div id="slug" class="d-none">{{ tricks.slug }}</div>
                     </div>
                 </div>   
             </div>
@@ -113,8 +118,28 @@
                 </div>
                 <div class="modal-footer">
                     {% for m in tricks.medias %}
+                    <img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">  
                     <div class="me-2 d-flex flex-column align-items-center">
                         <a href="{{ path('editDeleteMedia', {'id' : m.id}) }}">Supprimer</a>
+                    </div>
+                    {% endfor %}    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="editMedia" tabindex="-1" aria-labelledby="editMediaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <h5>Choisissez votre nouvel image à la une !</h5>
+                </div>
+                <div class="modal-footer">
+                    {% for m in tricks.medias %}
+                    <img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">  
+                    <div class="me-2 d-flex flex-column align-items-center">
+                        <a href="">Ajouter comme favoris</a>
                     </div>
                     {% endfor %}    
                 </div>
@@ -161,26 +186,29 @@ const swiper = new Swiper('.swiper', {
     <script>
         const newComment = document.querySelector('.newComment')
         const seeMore = document.querySelector('#seeMore')
+        const slug = document.getElementById("slug").innerHTML
         let num = 2
         
         seeMore.addEventListener('click', (e)=>{
             e.preventDefault()
-            const yep = num++
+            const cpt = num++
             //let url = Routing.generate('see_more', {'page' : yep});
             let url = '{{ path("see_more_comment", {'slug' : 'slug', 'page': 'page'}) }}'; 
-            url = url.replace("page", yep);
+            url = url.replace("slug", slug);
+            url = url.replace("page", cpt);
             fetch((url)).then(
                     response => response.json()
                 ).then(
                     data => {
                         data.forEach(el => {
+                            console.log(el)
                             let newp = document.createElement('p')
                             newp.innerHTML = `
                                 <div class="d-flex align-items-center">
                                     <div class="me-2 p-3">
-                                        avatar
+                                        <img src="/img/avatar.png" class="avatar card-img-top img-fluid rounded mb-4 mb-lg-0" alt="picture">
                                     </div>
-                                     <div class="mb-2 p-3 border shadow">
+                                    <div class="mb-2 p-3 border shadow">
                                         ${el.content}
                                     </div>
                                 </div>`

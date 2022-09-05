@@ -242,11 +242,12 @@ class TricksController extends AbstractController
         $limit = 4;
         $page = (int)$request->query->get("page", 1);
         $id = $trick->getId();
-        $allComments = $repository->getPaginatedComment($page, $limit, $id);
+        $allComments = $repository->getPaginatedComment($id, $page, $limit);
+        //dd($allComments);
         return $this->render('tricks/oneTricks.html.twig', [
             'formNewComment' => $form->createView(),
             'tricks' => $trick,
-            'all' => $allComments,
+            'allcomments' => $allComments,
             'favorite' => $favorite
         ]);
     }
@@ -256,11 +257,13 @@ class TricksController extends AbstractController
      */
     public function pagingComment(string $slug, int $page, CommentRepository $repository, Request $request, TricksRepository $tricksRepository): Response
     {
+        //dd($slug);
         $trick = $tricksRepository->findOneBy(['slug' => $slug]);
-        dd($trick);
+        //dd($trick);
         $limit = 5;
         $page = (int)$request->query->get("page", $page);
-        $allComments = $repository->getPaginatedComment($page, $limit, $id);
+        $id = $trick->getId();
+        $allComments = $repository->getPaginatedComment($id, $page, $limit);
         //dd($allComments);
         return $this->json($allComments, 200, [], ['groups' => 'comment:read']);
     }

@@ -19,6 +19,10 @@
     right: 15%;
 }
 
+p {
+  margin-bottom: 0px;
+}
+
 #img_accueil{
     background-image: url(../img/home2.jpg);
     height: 100%;
@@ -120,8 +124,8 @@ img {
 
 .avatar {
   border-radius: 50px; 
-  height: 64px; 
-  width: 64px;
+  height: 34px; 
+  width: 34px;
 }
 
 /* mail */
@@ -150,6 +154,11 @@ img {
 
 .test {
   display: none !important;
+}
+
+.himg {
+  height: 180px;
+  object-fit: cover;
 }
 
 /*<div style="position:relative; height:400px">
