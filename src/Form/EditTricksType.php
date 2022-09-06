@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -63,7 +64,7 @@ class EditTricksType extends AbstractType
                 ]
               ])
             ->add('medias', FileType::class,[
-                'label' => 'Ajouter des fichiers :',
+                'label' => 'Ajouter des photos :',
                 'multiple' => true,
                 'mapped' => false,
                 'required' => false,
@@ -71,14 +72,15 @@ class EditTricksType extends AbstractType
                     'class' => 'input-group',
                 ]
             ])
-            ->add('urls', CheckboxType::class,[
+            ->add('urls', UrlType::class,[
                 'mapped' => false,
                 'required' => false,
+                'label' => "Ajouter des videos",
                 'row_attr' => [
-                    'class' => 'checked',
+                    'class' => 'input-group',
                 ]])
             ->add('save', SubmitType::class, [
-                'label' => "Valider"
+                'label' => "Valider les modifications"
             ])
         ;
     }

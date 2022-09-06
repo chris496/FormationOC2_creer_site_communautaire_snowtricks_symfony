@@ -43,9 +43,6 @@ class TricksController extends AbstractController
         $limit = 5;
         $page = (int)$request->query->get("page", $page);
         $allTricks = $repository->getPaginatedTricks($page, $limit);
-        //dd($allTricks);
-        //$test = $repository->getMediasTest(277);
-        //dd($test);
         $array = [];
         foreach($allTricks as $tricks){
             $media = ($mediaRepo->findOneBy([
@@ -126,8 +123,6 @@ class TricksController extends AbstractController
             $video->setName('video');
             $video->setUrl($urlVideo);
 
-            //$slug = $form->get('title')->getData();;
-            //dd($slug);
             $newTricks->addUrl($video)
                     ->setSlug(strtolower($slugger->slug($form->get('title')->getData())))
                     ->setCreatedAt(new DateTimeImmutable())
@@ -147,8 +142,9 @@ class TricksController extends AbstractController
     /**
      * @Route("/editTricks/{id<\d+>}", name="editTricks")
      */
-    public function editTricks(Request $request, Tricks $tricks)
+    public function editTricks(Request $request, Tricks $tricks, MediaRepository $mediaRepository)
     {
+        $favorite = $mediaRepository->findOneBy(['tricks' => $tricks, 'favorite' => 1]);
         $form = $this->createForm(EditTricksType::class, $tricks);
         $form->handleRequest($request);
 
@@ -173,7 +169,8 @@ class TricksController extends AbstractController
 
         return $this->render('tricks/editTricks.html.twig', [
             'formEditTricks' => $form->createView(),
-            'tricks' => $tricks
+            'tricks' => $tricks,
+            'favorite' => $favorite
         ]);
     }
 
@@ -198,6 +195,17 @@ class TricksController extends AbstractController
         $em->flush();
 
         return $this->redirectToRoute(('home'));
+    }
+
+    /**
+     * @Route("/editFavoriteMedia/{id<\d+>}", name="editFavoriteMedia")
+     */
+    public function editFavoriteMedia(Request $request, Tricks $tricks, Media $media, int $id)
+    {
+        $test = $tricks->getMedias();
+        dd($test);
+        $images = $media->getFavorite();
+        dd($images);
     }
 
     /**

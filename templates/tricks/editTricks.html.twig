@@ -3,54 +3,88 @@
 {% block title %}Modifie un tricks !{% endblock %}
 
 {% block body %}
-    <div class="container-fluid">
-        <div class="row d-flex justify-content-center">
-            <div class="col-lg-5 m-5">
-                <h3 class="text-center mb-4">Modification du tricks</h3>
-                <div class="border p-4">
-                    {{ form_start(formEditTricks) }}
-                    <div class="mb-3">
-                        {{ form_widget(formEditTricks.title) }}
-                        {{ form_errors(formEditTricks.title) }}
+    <div class="my-3 container">
+        <div class="card border-primary rounded my-5">
+            {{ form_start(formEditTricks) }}
+            <div class="card_header">
+                <div class="row">
+                    {% if favorite %}
+                    <img class="w-100" src="{{ asset('/uploads/'~favorite.name) }}" width="100%" alt="">
+                    {% else %}
+                    <img class="w-100" src="{{ asset('/uploads/default.jpg') }}" width="100%" alt="">
+                    {% endif %}
+                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl">
+                        <div class="d-flex justify-content-start">
+                            <div class="d-flex flex-column">
+                                <h1 class="title_center">
+                                    {{ form_widget(formEditTricks.title) }}
+                                    {{ form_errors(formEditTricks.title) }}
+                                </h1>        
+                                {% if app.user %}
+                                <div class="buttons">
+                                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#editMedia">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </button>
+                                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                                {% endif %}   
+                            </div>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                    {{ tricks.id }}
+                </div>           
+            </div>
+
+            <div class="card-body">
+                <div class="row test_body">
+                    <div class="swiper">
+                        <div class="swiper-wrapper">
+                        {% for media in tricks.medias %}
+                            <div class="swiper-slide">
+                                <div class="d-flex flex-column">
+                                    <img class="diapo me-2" src="{{ asset('/uploads/'~media.name) }}" alt="">   
+                                    {% if app.user %}                                 
+                                    <div class="d-flex justify-content-around bord me-2">
+                                        <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
+                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
                     </div>
-                    <div class="mb-3">
-                        {{ form_row(formEditTricks.category) }}
-                    </div>
+                </div> 
+                <div class="mb-3">
+                    {{ form_widget(formEditTricks.content) }}
+                </div>
+                <div class="d-flex">
                     <div class="mb-3">
                         {{ form_row(formEditTricks.medias) }}
                     </div>
-                     
-                    <div>
-                        <h5>Image(s) et/ou video(s) :</h5>
-                        <div class="mb-3 d-flex">
-                            {% for m in tricks.medias %}
-                                <div class="me-2 d-flex flex-column align-items-center">
-                                    <img src="{{ asset('/uploads/'~m.name) }}" alt="" width="100">
-                                    <div class="d-flex">
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                                            <label class="form-check-label" for="flexSwitchCheckDefault"><strong>Star</strong></label>
-                                        </div>  
-                                        <div class="mx-1">|</div>
-                                        <div>
-                                        <a class="delete" href="{{ path('editDeleteMedia', {'id' : m.id}) }}"><i class="fa-solid fa-trash-can"></i></a></div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    <div class="text-end">
-                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks{{ tricks.id }}">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
-                    <div class="text-end">
-                        {{ form_row(formEditTricks.save) }}
+                    <div class="ms-3 mb-3">
+                        {{ form_row(formEditTricks.urls) }}
                     </div>
                 </div>
+                    <div class="w-50 mb-3">
+                        {{ form_row(formEditTricks.category) }}
+                    </div> 
+                    <div class="d-flex justify-content-end">
+                        <div class="text-end">
+                            <button type="button" class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#deleteTricks{{ tricks.id }}">
+                                Supprimer le tricks
+                            </button>
+                        </div>
+                        <div class="text-end">
+                            {{ form_row(formEditTricks.save) }}
+                        </div>
+                    </div>        
             </div>
         </div>
     </div>
@@ -64,6 +98,7 @@
                 </div>
                 <div class="modal-footer">
                     {% for m in tricks.medias %}
+                    <img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">  
                     <div class="me-2 d-flex flex-column align-items-center">
                         <a href="{{ path('editDeleteMedia', {'id' : m.id}) }}">Supprimer</a>
                     </div>
@@ -74,85 +109,20 @@
     </div>
 
     <!-- Modal -->
-                    <div class="modal fade" id="deleteTricks{{ tricks.id }}" tabindex="-1" aria-labelledby="deleteTricksLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-body text-center">
-                                    <h5>Voulez-vous vraiment supprimer cette figure ?</h5>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                    <a href="{{ path('deleteTricks', {'id' : tricks.id}) }}" class="btn btn-danger">Confirmer</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-    <div class="my-3 container">
-        <div class="card border-primary rounded my-5">
-            <div class="card_header">
-                <h1 class="title_center">
-                    
-                </h1>
-          
-                <div class="buttons">
-                    <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
-                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
+    <div class="modal fade" id="editMedia" tabindex="-1" aria-labelledby="editMediaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <h5>Choisissez votre nouvel image à la une !</h5>
                 </div>
-        
-                    <!--<img class="w-100" src="../img/home2.jpg" alt="">-->
-            
-              
-            </div>
-
-
-            <div class="card-body">
-               
-                    <div class="row">
-                        <div class="col-sm-6 col-md-4 col-lg-4 col-xl">
-                            <div class="d-flex justify-content-start">
-                                <div class="d-flex flex-column">
-                                    <img class="me-2" src="" width="300px" alt="">
-                                   
-                                    <div class="border">
-                                        <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
-                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    </div>
-                                
-                                </div>
-                                <div class="d-flex flex-column">
-                                 
-                                </div>
-                            </div>
-                        </div>
-                    </div>    
-              
-                <div class="mb-3">
-                        {{ form_widget(formEditTricks.content) }}
+                <div class="modal-footer">
+                    {% for m in tricks.medias %}
+                    <img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">  
+                    <div class="me-2 d-flex flex-column align-items-center">
+                        <a href="{{ path('editFavoriteMedia', {'id' : m.id}) }}">Ajouter comme favoris</a>
                     </div>
-                <div class="mb-4 row">
-                    <div class="col d-flex justify-content-center">
-                        <div class="me-2 badge bg-success">{{ tricks.createdat | date('d/m/Y H:i') }}</div>
-                        <div class="me-2 badge bg-warning">{{ tricks.updatedat | date('d/m/Y H:i') }}</div>
-                        <div class="badge bg-primary">{{ tricks.category.name }}</div>
-                    </div>
-                </div> 
-                
-                <hr>
-                <div class="mt-5 d-flex justify-content-center">
-                    <div class="newComment d-flex flex-column align-items-start">
-                       
-                    </div>
+                    {% endfor %}    
                 </div>
-                <div class="row mt-5 mb-2">
-                    <div class="col text-center">
-                        <button id="seeMore" class="btn btn-primary">Voir plus de commentaires</button>
-                    </div>
-                </div>   
             </div>
         </div>
     </div>
