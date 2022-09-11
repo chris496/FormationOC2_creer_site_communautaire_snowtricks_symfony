@@ -22,7 +22,7 @@ class Tricks
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=50, unique=true)
      * @Groups("tricks:read")
      */
     private $title;

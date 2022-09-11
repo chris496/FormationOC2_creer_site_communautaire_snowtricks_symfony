@@ -53,7 +53,7 @@ class CommentRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('c')
             ->andWhere('c.tricks = :id')
             ->setParameter('id', $id)
-            ->orderBy('c.createdAt')
+            ->orderBy('c.createdAt', 'DESC')
             ->setFirstResult(($page * $limit) - $limit)
             ->setMaxResults($limit)
         ;

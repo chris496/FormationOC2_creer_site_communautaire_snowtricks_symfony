@@ -13,6 +13,8 @@ use App\Form\CommentTricksType;
 use App\Repository\MediaRepository;
 use App\Repository\TricksRepository;
 use App\Repository\CommentRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -102,6 +104,8 @@ class TricksController extends AbstractController
             $images = $form->get('medias')->getData();
             
             $urlVideo = $form->get('urls')->getData();
+            dd($urlVideo);
+
             $i = 0;
             foreach($images as $image){
 
@@ -150,6 +154,7 @@ class TricksController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()){
             $images = $form->get('medias')->getData();
+            $urlVideo = $form->get('urls')->getData();
             foreach($images as $image){
                 $fichier = md5(uniqid()).'.'.$image->guessExtension();
                 $image->move(
@@ -160,6 +165,11 @@ class TricksController extends AbstractController
                 $img->setName($fichier);
                 $tricks->addMedia($img);
             }
+            $video = new Media();
+            $video->setName('video');
+            $video->setUrl($urlVideo);
+
+            $tricks->addUrl($video);
             $tricks->setUpdatedAt(new DateTimeImmutable());
             $this->getDoctrine()->getManager()->flush();
 
@@ -198,14 +208,21 @@ class TricksController extends AbstractController
     }
 
     /**
-     * @Route("/editFavoriteMedia/{id<\d+>}", name="editFavoriteMedia")
+     * @Route("/tricks/{slug}/editFavoriteMedia/{id<\d+>}", name="editFavoriteMedia")
      */
-    public function editFavoriteMedia(Request $request, Tricks $tricks, Media $media, int $id)
+    public function editFavoriteMedia(string $slug, Request $request, MediaRepository $mediaRepository, TricksRepository $tricksRepository, int $id, EntityManagerInterface $em)
     {
-        $test = $tricks->getMedias();
-        dd($test);
-        $images = $media->getFavorite();
-        dd($images);
+        $trick = $tricksRepository->findOneBy(['slug' => $slug]);
+        $med = $mediaRepository->findOneBy(['tricks' => $trick, 'id' => $id]);
+        foreach($trick->getMedias() as $media){
+            $media->setFavorite(false);
+            $em->persist($media);
+        }
+        $med->setFavorite(true);
+        $em->persist($med);
+        $em->flush();
+
+        return $this->redirectToRoute('oneTricks', ['slug'=> $trick->getSlug()]);
     }
 
     /**
@@ -217,9 +234,7 @@ class TricksController extends AbstractController
         if(file_exists($name)){
             unlink($name);
         }
-
         $em = $this->getDoctrine()->getManager();
-
         $em->remove($media);
         $em->flush();
 
@@ -243,15 +258,15 @@ class TricksController extends AbstractController
             $em = $this->getDoctrine()->getManager();
             $em->persist($newComment);
             $em->flush();
-
             $this->addFlash('success', 'Votre nouveau tricks est crée !!');
-            return $this->redirectToRoute('home');
+
+            return $this->redirectToRoute('oneTricks', ['slug'=> $trick->getSlug()]);
         }
         $limit = 4;
         $page = (int)$request->query->get("page", 1);
         $id = $trick->getId();
         $allComments = $repository->getPaginatedComment($id, $page, $limit);
-        //dd($allComments);
+        
         return $this->render('tricks/oneTricks.html.twig', [
             'formNewComment' => $form->createView(),
             'tricks' => $trick,
@@ -265,14 +280,12 @@ class TricksController extends AbstractController
      */
     public function pagingComment(string $slug, int $page, CommentRepository $repository, Request $request, TricksRepository $tricksRepository): Response
     {
-        //dd($slug);
         $trick = $tricksRepository->findOneBy(['slug' => $slug]);
-        //dd($trick);
         $limit = 5;
         $page = (int)$request->query->get("page", $page);
         $id = $trick->getId();
         $allComments = $repository->getPaginatedComment($id, $page, $limit);
-        //dd($allComments);
+        
         return $this->json($allComments, 200, [], ['groups' => 'comment:read']);
     }
 }

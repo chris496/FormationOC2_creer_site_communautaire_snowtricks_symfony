@@ -161,6 +161,9 @@ img {
   object-fit: cover;
 }
 
+.com_date {
+  font-size: 11px;
+}
 /*<div style="position:relative; height:400px">
    <div style="position:absolute;z-index:1">
       <img src="images/greenhouse.jpg">
