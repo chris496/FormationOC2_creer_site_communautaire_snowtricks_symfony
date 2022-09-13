@@ -11,7 +11,6 @@ class PagingService
 
     public function paging($page, $limit)
     {
-        
         $pages = (int)$this->request->query->get("page", $page);
         dd($pages);
         $paging = $repository->getPaginatedTricks($pages, $limit);
