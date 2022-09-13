@@ -60,7 +60,7 @@ class CommentRepository extends ServiceEntityRepository
 
         return $query->getQuery()->getResult();
     }
-    
+
     // /**
     //  * @return Comment[] Returns an array of Comment objects
     //  */

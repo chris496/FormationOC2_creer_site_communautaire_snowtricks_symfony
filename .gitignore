@@ -9,6 +9,7 @@
 /var/
 /vendor/
 uploads
+/tools
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###

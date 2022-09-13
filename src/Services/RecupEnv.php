@@ -10,7 +10,7 @@ class RecupEnv
         $demo
     ) {
     }
-    
+
     public function getDemo(): string
     {
         return $this->demo;

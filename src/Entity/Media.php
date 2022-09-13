@@ -24,7 +24,7 @@ class Media
 
     /**
      * @ORM\ManyToOne(targetEntity=Tricks::class, inversedBy="medias")
-     * @ORM\JoinColumn(onDelete="CASCADE") 
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $tricks;
 
@@ -40,7 +40,7 @@ class Media
 
     /**
      * @ORM\ManyToOne(targetEntity=Tricks::class, inversedBy="urls")
-     * @ORM\JoinColumn(onDelete="CASCADE") 
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $tricksForVideo;
 

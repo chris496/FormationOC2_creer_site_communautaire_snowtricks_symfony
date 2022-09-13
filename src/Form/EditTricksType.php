@@ -63,7 +63,7 @@ class EditTricksType extends AbstractType
                   ])
                 ]
               ])
-            ->add('medias', FileType::class,[
+            ->add('medias', FileType::class, [
                 'label' => 'Ajouter des photos :',
                 'multiple' => true,
                 'mapped' => false,
@@ -72,7 +72,7 @@ class EditTricksType extends AbstractType
                     'class' => 'input-group',
                 ]
             ])
-            ->add('urls', UrlType::class,[
+            ->add('urls', UrlType::class, [
                 'mapped' => false,
                 'required' => false,
                 'label' => "Ajouter des videos",

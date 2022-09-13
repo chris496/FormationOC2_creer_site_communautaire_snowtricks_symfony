@@ -268,7 +268,7 @@ class Tricks
 
     /**
      * Get the value of favorite
-     */ 
+     */
     public function getFavorite()
     {
         return $this->favorite;
@@ -278,7 +278,7 @@ class Tricks
      * Set the value of favorite
      *
      * @return  self
-     */ 
+     */
     public function setFavorite($favorite)
     {
         $this->favorite = $favorite;

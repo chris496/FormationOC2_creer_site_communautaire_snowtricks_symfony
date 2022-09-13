@@ -38,7 +38,7 @@
                                     <img class="diapo me-2" src="{{ asset('/uploads/'~media.name) }}" alt="">   
                                     {% if app.user %}                                 
                                     <div class="d-flex justify-content-around bord me-2">
-                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#editFavoriteMedia">
+                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#favoriteMedia{{ media.id }}">
                                         <i class="fa-solid fa-pencil"></i>
                                     </button>
                                         <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia{{ media.id }}">
@@ -53,9 +53,8 @@
                             <div class="swiper-slide">
                                 <div class="d-flex flex-column">
                                     <embed class="diapo me-2" type="video/webm" src="{{ video(url.url) }}">
-                                    {% if app.user %}                                 
+                                    {% if app.user %}                       
                                     <div class="d-flex justify-content-around bord me-2">
-                                        <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
                                         <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia{{ url.id }}">
                                             <i class="fa-solid fa-trash-can"></i>
                                         </button>
@@ -107,7 +106,7 @@
                             {% for allcomment in allcomments %}
                             <div class="d-flex align-items-center">
                                 <div class="me-2 p-3">
-                                    <img src="/img/avatar.png" class="avatar card-img-top img-fluid rounded mb-4 mb-lg-0" alt="picture">
+                                    <img src="{{ avatar }}" class="avatar card-img-top img-fluid rounded mb-4 mb-lg-0" alt="picture">
                                 </div>
                                 <div class="mb-2 p-3 border shadow">
                                     {{ allcomment.content }}
@@ -169,6 +168,26 @@
         </div>
     </div>
 {% endfor %}  
+
+<!-- Modal -->{% for m in tricks.medias %}
+    <div class="modal fade" id="favoriteMedia{{ m.id }}" tabindex="-1" aria-labelledby="favoriteMediaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <h5>Mettre ce média en favori ?</h5>
+                </div>
+                <div class="modal-footer d-flex flex-column">
+                 
+                    <img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">  
+                    <div class="me-2 d-flex flex-column align-items-center">
+                        <a href="{{ path('favoriteMedia', {'id' : m.id, 'slug' : tricks.slug}) }}">Ajouter en favori</a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %} 
 
     <!-- Modal -->
     <div class="modal fade" id="editFavoriteMedia" tabindex="-1" aria-labelledby="editFavoriteMediaLabel" aria-hidden="true">

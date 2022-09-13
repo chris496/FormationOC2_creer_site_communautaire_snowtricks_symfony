@@ -54,9 +54,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $password;
 
-     /**
-     * @ORM\Column(type="datetime_immutable")
-     */
+    /**
+    * @ORM\Column(type="datetime_immutable")
+    */
     private $createdAt;
 
     /**
@@ -68,6 +68,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\OneToMany(targetEntity=Tricks::class, mappedBy="user", orphanRemoval=true)
      */
     private $tricks;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="user")
+     */
+    private $comments;
 
     /**
      * @ORM\Column(type="boolean")

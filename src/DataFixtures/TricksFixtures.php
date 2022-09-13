@@ -32,8 +32,7 @@ class TricksFixtures extends Fixture
         $categorie = ['Grabs', 'Rotations', 'Flips', 'Slides', 'Misaligned Rotations', 'One foot', 'Old school'];
         $tricksName = ['Nose Grab', 'Japan Air', '720', '1080', 'Mac Twist', 'Hakon Flip', 'Rodeo', 'Misty', 'Nose Slide', 'Tail Slide', 'One Footers', 'One foot Indy', 'Method Air', 'Backside Air','Rocket Air'];
 
-        for ($u=0; $u<1; $u++) 
-        {
+        for ($u=0; $u<1; $u++) {
             $user = new User();
             $user->setCreatedAt(new DateTimeImmutable());
             $user->setEmail($faker->safeEmail)
@@ -46,19 +45,17 @@ class TricksFixtures extends Fixture
             $manager->persist($user);
         }
 
-        foreach ($categorie as $cat) 
-        {
+        foreach ($categorie as $cat) {
             $categorie = new Category();
             $categorie->setName($cat);
             $manager->persist($categorie);
             $cats[] = $categorie;
         }
 
-        foreach ($tricksName as $test) 
-        {
+        foreach ($tricksName as $test) {
             $tricks = new Tricks();
             $img = new Media();
-            $img->setName('/default.jpg');    
+            $img->setName('/default.jpg');
             $tricks->setTitle($test)
                 ->setContent($faker->text(40))
                 ->setCreatedAt(new DateTimeImmutable())
@@ -68,10 +65,9 @@ class TricksFixtures extends Fixture
                 ->setUser($user);
 
             $manager->persist($tricks);
-        
 
-            for ($k=0; $k<4; $k++) 
-            {
+
+            for ($k=0; $k<4; $k++) {
                 $comment = new Comment();
                 $comment->setContent($faker->text(40))
                     ->setCreatedAt(new DateTimeImmutable())

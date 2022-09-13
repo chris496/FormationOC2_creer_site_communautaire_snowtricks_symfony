@@ -24,7 +24,7 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
-             return $this->redirectToRoute('home');
+            return $this->redirectToRoute('home');
         }
 
         // get the login error if there is one
@@ -50,19 +50,19 @@ class SecurityController extends AbstractController
     {
         $form = $this->createForm(ResetPassType::class);
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $user = $user->findOneByEmail($data['email']);
 
             if ($user === null) {
                 $this->addFlash('danger', 'Cette adresse e-mail est inconnue');
-                
+
                 return $this->redirectToRoute('app_login');
             }
 
             $token = $tokenGenerator->generateToken();
 
-            try{
+            try {
                 $user->setResetToken($token);
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($user);
@@ -71,7 +71,7 @@ class SecurityController extends AbstractController
                 $this->addFlash('warning', $e->getMessage());
                 return $this->redirectToRoute('app_login');
             }
-            
+
             $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
 
             $email = (new TemplatedEmail())
@@ -103,26 +103,26 @@ class SecurityController extends AbstractController
     public function resetPassword(Request $request, $token, UserPasswordHasherInterface $userPasswordHasher, UserRepository $user)
     {
         $user = $user->findOneBy(['reset_token' => $token]);
-        if($user === null) {
+        if ($user === null) {
             $this->addFlash('danger', 'Token Inconnu');
             return $this->redirectToRoute('home');
         }
         if ($request->isMethod('POST')) {
             $user->setResetToken(null);
             $user->setPassword(
-            $userPasswordHasher->hashPassword(
-                $user,
-                $request->request->get('password')
+                $userPasswordHasher->hashPassword(
+                    $user,
+                    $request->request->get('password')
                 )
             );
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-            
+
             $this->addFlash('message', 'Mot de passe mis à jour');
 
             return $this->redirectToRoute('home');
-        }else {
+        } else {
             // Si on n'a pas reçu les données, on affiche le formulaire
             return $this->render('security/reset_password.html.twig', ['token' => $token]);
         }

@@ -62,7 +62,7 @@ class CreateTricksType extends AbstractType
                   ])
                 ]
               ])
-            ->add('medias', FileType::class,[
+            ->add('medias', FileType::class, [
                 'label' => 'Ajouter des fichiers :',
                 'multiple' => true,
                 'mapped' => false,
@@ -71,7 +71,7 @@ class CreateTricksType extends AbstractType
                     'class' => 'input-group',
                 ]
             ])
-            ->add('urls', UrlType::class,[
+            ->add('urls', UrlType::class, [
                 'mapped' => false,
                 'required' => false,
                 'row_attr' => [

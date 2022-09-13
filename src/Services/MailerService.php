@@ -31,8 +31,8 @@ class MailerService
                 ->context([
                     'token' => $token,
                 ])
-            ;
+        ;
 
-            $this->mailer->send($email);
+        $this->mailer->send($email);
     }
 }

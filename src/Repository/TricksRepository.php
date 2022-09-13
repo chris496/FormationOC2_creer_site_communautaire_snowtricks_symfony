@@ -64,7 +64,6 @@ class TricksRepository extends ServiceEntityRepository
      */
     public function getMediasTest($id)
     {
-
         /*SELECT `tricks`.`id`, `media`.* FROM `tricks` LEFT JOIN `media` ON `media`.`tricks_id` = `tricks`.`id`;*/
         $query = $this->createQueryBuilder('t')
             ->andWhere('t.id = :id')
