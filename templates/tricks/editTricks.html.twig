@@ -22,7 +22,7 @@
                                 </h1>        
                                 {% if app.user %}
                                 <div class="buttons">
-                                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#editFavoriteMedia">
+                                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#favoriteMedia">
                                         <i class="fa-solid fa-pencil"></i>
                                     </button>
                                     <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
@@ -129,7 +129,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="editFavoriteMedia" tabindex="-1" aria-labelledby="editFavoriteMediaLabel" aria-hidden="true">
+    <div class="modal fade" id="favoriteMedia" tabindex="-1" aria-labelledby="favoriteMediaLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body text-center">
@@ -139,13 +139,28 @@
                     {% for m in tricks.medias %}
                     <img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">  
                     <div class="me-2 d-flex flex-column align-items-center">
-                        <a href="{{ path('editFavoriteMedia', {'id' : m.id, 'slug' : tricks.slug}) }}">Ajouter comme favoris</a>
+                        <a href="{{ path('favoriteMedia', {'id' : m.id, 'slug' : tricks.slug}) }}">Ajouter comme favoris</a>
                     </div>
                     {% endfor %}    
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteTricks{{ tricks.id }}" tabindex="-1" aria-labelledby="deleteTricksLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <h5>Voulez-vous vraiment supprimer cette figure ?</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <a href="{{ path('deleteTricks', {'id' : tricks.id}) }}" class="btn btn-danger">Confirmer</a>
+                </div>
+            </div>
+        </div>
+    </div>  
 {% endblock %}
 
 {% block javascripts %}

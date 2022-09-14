@@ -20,6 +20,7 @@ use App\Repository\MediaRepository;
 use App\Repository\TricksRepository;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Id;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,16 +30,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TricksController extends AbstractController
 {
+    public $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+    
     /**
      * @Route("/", name="home")
      */
-    public function index(TricksRepository $repository, PagingService $pagingservice, Request $request): Response
+    public function index(TricksRepository $repository, Request $request): Response
     {
-        /*$limit = 15;
+        $limit = 15;
         $page = (int)$request->query->get("page", 1);
-        $allTricks = $repository->getPaginatedTricks($page, $limit);*/
-        $paging = $pagingservice->paging(1, 15);
-        dd($paging);
+        $allTricks = $repository->getPaginatedTricks($page, $limit);
+        //$allTricks = $pagingservice->paging(1, 15);
+        //dd($allTricks);
         return $this->render('tricks/index.html.twig', [
             'allTricks' => $allTricks
         ]);
@@ -79,23 +87,11 @@ class TricksController extends AbstractController
     public function allTricks(TricksRepository $repository): Response
     {
         $allTricks = $repository->findAll();
+
         return $this->render('tricks/allTricks.html.twig', [
             'allTricks' => $allTricks
         ]);
     }
-
-    /**
-     * @Route("/gravatar", name="gravatar")
-     */
-    //public function Gravatar(GravatarService $gravatar): Response
-    //{
-
-    //    $avatar = $gravatar->get_gravatar('formationoc@christophedumas1.fr', 80, 'mp', 'g', false, array());
-
-    //    return $this->render('test/gravatar.html.twig', [
-    //        'avatar' => $avatar,
-    //    ]);
-    //}
 
     /**
      * @Route("/newTricks", name="newTricks")
@@ -105,13 +101,8 @@ class TricksController extends AbstractController
         $newTricks = new Tricks();
         $form = $this->createForm(CreateTricksType::class, $newTricks);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $images = $form->get('medias')->getData();
-
-            $urlVideo = $form->get('urls')->getData();
-            //dd($urlVideo);
-
             $i = 0;
             foreach ($images as $image) {
                 $fichier = md5(uniqid()).'.'.$image->guessExtension();
@@ -128,29 +119,25 @@ class TricksController extends AbstractController
                 $img->setName($fichier);
                 $newTricks->addMedia($img);
             }
-
-
-
-            $mvideos = $multiVideo->multi_video($urlVideo);
-            //dd($mvideos);
-            foreach ($mvideos as $mvideo) {
-                $video = new Media();
-                $video->setName('video');
-                $video->setUrl($mvideo);
-                $newTricks->addUrl($video);
+            if($urlVideo = $form->get('urls')->getData()){
+                $mvideos = $multiVideo->multi_video($urlVideo);
+                foreach ($mvideos as $mvideo) {
+                    $video = new Media();
+                    $video->setName('video')
+                        ->setUrl($mvideo);
+                    $newTricks->addUrl($video);
+                }
             }
-
-
             $newTricks->setSlug(strtolower($slugger->slug($form->get('title')->getData())))
                     ->setCreatedAt(new DateTimeImmutable())
                     ->setUser($this->getUser());
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($newTricks);
-            $em->flush();
-
+            $this->em->persist($newTricks);
+            $this->em->flush();
             $this->addFlash('success', 'Votre nouveau tricks est crée !!');
+
             return $this->redirectToRoute('home');
         }
+
         return $this->render('tricks/newTricks.html.twig', [
             'formNewTricks' => $form->createView()
         ]);
@@ -159,15 +146,13 @@ class TricksController extends AbstractController
     /**
      * @Route("/editTricks/{id<\d+>}", name="editTricks")
      */
-    public function editTricks(Request $request, Tricks $tricks, MediaRepository $mediaRepository)
+    public function editTricks(Request $request, Tricks $tricks, MediaRepository $mediaRepository, VideoService $multiVideo)
     {
         $favorite = $mediaRepository->findOneBy(['tricks' => $tricks, 'favorite' => 1]);
         $form = $this->createForm(EditTricksType::class, $tricks);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $images = $form->get('medias')->getData();
-            $urlVideo = $form->get('urls')->getData();
             foreach ($images as $image) {
                 $fichier = md5(uniqid()).'.'.$image->guessExtension();
                 $image->move(
@@ -178,16 +163,20 @@ class TricksController extends AbstractController
                 $img->setName($fichier);
                 $tricks->addMedia($img);
             }
-            $video = new Media();
-            $video->setName('video');
-            $video->setUrl($urlVideo);
-
-            $tricks->addUrl($video);
+            if($urlVideo = $form->get('urls')->getData()){
+                $mvideos = $multiVideo->multi_video($urlVideo);
+                foreach ($mvideos as $mvideo) {
+                    $video = new Media();
+                    $video->setName('video')
+                        ->setUrl($mvideo);
+                    $tricks->addUrl($video);
+                }
+            }
             $tricks->setUpdatedAt(new DateTimeImmutable());
-            $this->getDoctrine()->getManager()->flush();
-
+            $this->em->flush();
             $this->addFlash('success', 'Votre tricks a été modifié !!');
-            return $this->redirectToRoute('home');
+
+            return $this->redirectToRoute('oneTricks', ['slug'=> $tricks->getSlug()]);
         }
 
         return $this->render('tricks/editTricks.html.twig', [
@@ -200,7 +189,7 @@ class TricksController extends AbstractController
     /**
      * @Route("/deleteTricks/{id<\d+>}", name="deleteTricks")
      */
-    public function deleteTricks(Request $request, Tricks $tricks)
+    public function deleteTricks(Tricks $tricks)
     {
         $medias = $tricks->getMedias();
         if ($medias) {
@@ -211,48 +200,26 @@ class TricksController extends AbstractController
                 }
             }
         }
-
-        $em = $this->getDoctrine()->getManager();
-
-        $em->remove($tricks);
-        $em->flush();
+        $this->em->remove($tricks);
+        $this->em->flush();
 
         return $this->redirectToRoute(('home'));
     }
 
     /**
-     * @Route("/tricks/{slug}/editFavoriteMedia/{id<\d+>}", name="editFavoriteMedia")
-     */
-    public function editFavoriteMedia(string $slug, Request $request, MediaRepository $mediaRepository, TricksRepository $tricksRepository, int $id, EntityManagerInterface $em)
-    {
-        $trick = $tricksRepository->findOneBy(['slug' => $slug]);
-        $med = $mediaRepository->findOneBy(['tricks' => $trick, 'id' => $id]);
-        foreach ($trick->getMedias() as $media) {
-            $media->setFavorite(false);
-            $em->persist($media);
-        }
-        $med->setFavorite(true);
-        $em->persist($med);
-        $em->flush();
-
-        return $this->redirectToRoute('oneTricks', ['slug'=> $trick->getSlug()]);
-    }
-
-    /**
      * @Route("/tricks/{slug}/favoriteMedia/{id<\d+>}", name="favoriteMedia")
      */
-    public function favoriteMedia(string $slug, Request $request, MediaRepository $mediaRepository, TricksRepository $tricksRepository, int $id, EntityManagerInterface $em)
+    public function favoriteMedia(string $slug, MediaRepository $mediaRepository, TricksRepository $tricksRepository, int $id)
     {
         $trick = $tricksRepository->findOneBy(['slug' => $slug]);
         $med = $mediaRepository->findOneBy(['tricks' => $trick, 'id' => $id]);
-        //dd($med);
         foreach ($trick->getMedias() as $media) {
             $media->setFavorite(false);
-            $em->persist($media);
+            $this->em->persist($media);
         }
         $med->setFavorite(true);
-        $em->persist($med);
-        $em->flush();
+        $this->em->persist($med);
+        $this->em->flush();
 
         return $this->redirectToRoute('oneTricks', ['slug'=> $trick->getSlug()]);
     }
@@ -260,15 +227,14 @@ class TricksController extends AbstractController
     /**
      * @Route("/deleteMedia/{id}", name="editDeleteMedia")
      */
-    public function deleteMedia(Request $request, Media $media)
+    public function deleteMedia(Media $media)
     {
         $name = $this->getParameter("images_directory") . '/' .$media->getName();
         if (file_exists($name)) {
             unlink($name);
         }
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($media);
-        $em->flush();
+        $this->em->remove($media);
+        $this->em->flush();
 
         return $this->redirectToRoute(('home'));
     }
@@ -278,8 +244,7 @@ class TricksController extends AbstractController
      */
     public function oneTricks(string $slug, Request $request, CommentRepository $repository, TricksRepository $tricksRepository, MediaRepository $mediaRepository, GravatarService $gravatar, UserRepository $userRepository)
     {
-        //$user = $this->getUser();
-        //dd($user);
+        $user = $this->getUser();
         $trick = $tricksRepository->findOneBy(['slug' => $slug]);
         $favorite = $mediaRepository->findOneBy(['tricks' => $trick, 'favorite' => 1]);
         $newComment = new Comment();
@@ -288,12 +253,11 @@ class TricksController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $newComment->setTricks($trick);
             $newComment->setCreatedAt(new DateTimeImmutable());
-            dd($newComment->setUser());
+            $newComment->setUser($user);
             $trick->addComment($newComment);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($newComment);
-            $em->flush();
-            $this->addFlash('success', 'Votre nouveau tricks est crée !!');
+            $this->em->persist($newComment);
+            $this->em->flush();
+            $this->addFlash('success', 'Votre nouveau commentaire est crée !!');
 
             return $this->redirectToRoute('oneTricks', ['slug'=> $trick->getSlug()]);
         }
@@ -302,7 +266,6 @@ class TricksController extends AbstractController
         $id = $trick->getId();
         $allComments = $repository->getPaginatedComment($id, $page, $limit);
         $avatar = $gravatar->get_gravatar('form', 80, 'mp', 'g', false, array());
-        //dd($avatar);
 
         return $this->render('tricks/oneTricks.html.twig', [
             'formNewComment' => $form->createView(),

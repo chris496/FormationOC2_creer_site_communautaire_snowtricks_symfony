@@ -6,10 +6,9 @@ class VideoService
 {
     public function multi_video($urlVideo)
     {
-        //dd($urlVideo);
-        $var = $urlVideo;
-        $tab = explode(',', $var);
+        $url = $urlVideo;
+        $explode = explode(',', $url);
 
-        return $tab;
+        return $explode;
     }
 }

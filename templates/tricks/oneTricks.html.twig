@@ -18,7 +18,7 @@
                  
                 {% if app.user %}
                 <div class="buttons">
-                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#editFavoriteMedia">
+                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#favoriteMedia">
                         <i class="fa-solid fa-pencil"></i>
                     </button>
                     <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
@@ -109,7 +109,7 @@
                                     <img src="{{ avatar }}" class="avatar card-img-top img-fluid rounded mb-4 mb-lg-0" alt="picture">
                                 </div>
                                 <div class="mb-2 p-3 border shadow">
-                                    {{ allcomment.content }}
+                                    {{ allcomment.content }}            
                                 </div>   
                             </div>
                             <div class="com_date mb-2 p-1 border text-center">
@@ -167,7 +167,7 @@
             </div>
         </div>
     </div>
-{% endfor %}  
+{% endfor %} 
 
 <!-- Modal -->{% for m in tricks.medias %}
     <div class="modal fade" id="favoriteMedia{{ m.id }}" tabindex="-1" aria-labelledby="favoriteMediaLabel" aria-hidden="true">
@@ -189,8 +189,8 @@
     </div>
 {% endfor %} 
 
-    <!-- Modal -->
-    <div class="modal fade" id="editFavoriteMedia" tabindex="-1" aria-labelledby="editFavoriteMediaLabel" aria-hidden="true">
+<!-- Modal -->
+    <div class="modal fade" id="favoriteMedia" tabindex="-1" aria-labelledby="favoriteMediaLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-body text-center">
@@ -200,13 +200,13 @@
                     {% for m in tricks.medias %}
                     <img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">  
                     <div class="me-2 d-flex flex-column align-items-center">
-                        <a href="{{ path('editFavoriteMedia', {'id' : m.id, 'slug' : tricks.slug}) }}">Ajouter comme favoris</a>
+                        <a href="{{ path('favoriteMedia', {'id' : m.id, 'slug' : tricks.slug}) }}">Ajouter comme favoris</a>
                     </div>
                     {% endfor %}    
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
 {% endblock %}
 
 

@@ -18,13 +18,9 @@ class GravatarService
      */
     public function get_gravatar($email, $s = 80, $d = 'mp', $r = 'g', $img = true, $atts = array())
     {
-        //dd($email, $d, $r, $img, $atts);
         $url = 'https://www.gravatar.com/avatar/';
-
         $url .= md5(strtolower(trim($email)));
-
         $url .= "?s=$s&d=$d&r=$r";
-
         if ($img) {
             $url = '<img src="' . $url . '"';
             foreach ($atts as $key => $val) {

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Form\ResetPassType;
 use App\Services\MailerService;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Mailer\MailerInterface;
@@ -18,6 +19,13 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 class SecurityController extends AbstractController
 {
+    public $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+    
     /**
      * @Route("/login", name="app_login")
      */
@@ -26,7 +34,6 @@ class SecurityController extends AbstractController
         if ($this->getUser()) {
             return $this->redirectToRoute('home');
         }
-
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
@@ -53,42 +60,33 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $user = $user->findOneByEmail($data['email']);
-
             if ($user === null) {
                 $this->addFlash('danger', 'Cette adresse e-mail est inconnue');
 
                 return $this->redirectToRoute('app_login');
             }
-
             $token = $tokenGenerator->generateToken();
-
             try {
                 $user->setResetToken($token);
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($user);
-                $entityManager->flush();
+                $this->em->persist($user);
+                $this->em->flush();
             } catch (\Exception $e) {
                 $this->addFlash('warning', $e->getMessage());
                 return $this->redirectToRoute('app_login');
             }
-
             $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
-
             $email = (new TemplatedEmail())
                 ->from('formationoc@christophedumas1.fr')
                 ->to($user->getEmail())
                 ->subject('Reset !')
-
             // path of the Twig template to render
                 ->htmlTemplate('emails/reset_pass.html.twig')
-
             // pass variables (name => value) to the template
                 ->context([
                     'token' => $token,
                     'url' => $url
                 ])
             ;
-
             $mailer->send($email);
         }
 
@@ -115,9 +113,8 @@ class SecurityController extends AbstractController
                     $request->request->get('password')
                 )
             );
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $this->em->persist($user);
+            $this->em->flush();
 
             $this->addFlash('message', 'Mot de passe mis à jour');
 

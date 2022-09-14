@@ -18,15 +18,21 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 class RegistrationController extends AbstractController
 {
+    public $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/register", name="app_register")
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, EntityManagerInterface $entityManager, MailerService $mailer): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, UserAuthenticator $authenticator, MailerService $mailer): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             // encode the plain password
             $user->setPassword(
@@ -37,8 +43,8 @@ class RegistrationController extends AbstractController
             );
             $user->setActivationToken(md5(uniqid()));
             $user->setCreatedAt(new DateTimeImmutable());
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $this->em->persist($user);
+            $this->em->flush();
             $mailer->sendMail($user->getEmail(), $user->getActivationToken());
             // do anything else you need here, like send an email
             $this->addFlash('success', 'Merci d\'activer votre nouveau compte par mail !!');
@@ -68,9 +74,8 @@ class RegistrationController extends AbstractController
 
         $user->setActivationToken(null);
         $user->setIsVerified(true);
-        $entityManager = $this->getDoctrine()->getManager();
-        $entityManager->persist($user);
-        $entityManager->flush();
+        $this->em->persist($user);
+        $this->em->flush();
 
         $this->addFlash('success', 'Votre compte est activée !!');
         return $this->redirectToRoute('app_login');
