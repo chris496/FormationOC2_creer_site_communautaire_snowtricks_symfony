@@ -40,15 +40,20 @@ class TricksController extends AbstractController
     /**
      * @Route("/", name="home")
      */
-    public function index(TricksRepository $repository, Request $request): Response
+    public function index(TricksRepository $repository, MediaRepository $mediaRepo, Request $request): Response
     {
         $limit = 15;
         $page = (int)$request->query->get("page", 1);
         $allTricks = $repository->getPaginatedTricks($page, $limit);
         //$allTricks = $pagingservice->paging(1, 15);
         //dd($allTricks);
+        foreach ($allTricks as $tricks) {
+            $media = ($mediaRepo->findOneBy([ 'tricks' => $tricks,
+            'favorite' => true ]));
+        }
+
         return $this->render('tricks/index.html.twig', [
-            'allTricks' => $allTricks
+            'allTricks' => $allTricks,
         ]);
     }
 
@@ -72,12 +77,13 @@ class TricksController extends AbstractController
                 'title' => $tricks->getTitle(),
                 'content' => $tricks->getContent(),
                 'slug' => $tricks->getSlug(),
-                'medias' => $media ? $media->getName() : "/default.jpg",
+                'medias' => $media ? $media->getName() : "default.jpg",
                 'tricks' => $this->generateUrl('oneTricks', ['slug' => $tricks->getSlug()]),
                 'editTricks' => $this->generateUrl('editTricks', ['id' => $tricks->getId()]),
                 'delete' => $tricks->getId()
             ];
         }
+
         return $this->json($array, 200, [], ['groups' => 'tricks:read']);
     }
 
