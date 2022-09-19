@@ -1,21 +1,13 @@
-{% block body %
-    <div class="mt-5 d-flex justify-content-center">
-                    <div class="newComment d-flex flex-column align-items-start">
-                        <div>
-                            {% for allcomment in allcomments %}
-                            <div class="d-flex align-items-center">
-                                <div class="me-2 p-3">
-                                    <img src="{{ avatar }}" class="avatar card-img-top img-fluid rounded mb-4 mb-lg-0" alt="picture">
-                                </div>
-                                <div class="mb-2 p-3 border shadow">
-                                    {{ allcomment.content }}
-                                </div>   
-                            </div>
-                            <div class="com_date mb-2 p-1 border text-center">
-                                {{ allcomment.createdat | date('d/m/Y H:i') }}
-                            </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
+{% block body %}
+    <div class="d-flex align-items-center">
+        <div class="me-2 p-3">
+            <img src="{{ avatar }}" class="avatar card-img-top img-fluid rounded mb-4 mb-lg-0" alt="picture">
+        </div>
+        <div class="mb-2 p-3 border shadow">
+            {{ allcomment.content }}            
+        </div>   
+    </div>
+    <div class="com_date mb-2 p-1 border text-center">
+        <strong>{{ allcomment.user.firstname }}</strong> {{ allcomment.createdat | date('d/m/Y H:i') }}
+    </div>
 {% endblock %}

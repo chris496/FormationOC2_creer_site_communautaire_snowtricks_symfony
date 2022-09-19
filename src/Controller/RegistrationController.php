@@ -20,9 +20,10 @@ class RegistrationController extends AbstractController
 {
     public $em;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, UserRepository $userRepository)
     {
         $this->em = $em;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -64,9 +65,9 @@ class RegistrationController extends AbstractController
     /**
      * @Route("/activation/{token}", name="activation")
      */
-    public function activation($token, UserRepository $user)
+    public function activation($token)
     {
-        $user = $user->findOneBy(['activation_token' => $token]);
+        $user = $this->userRepository->findOneBy(['activation_token' => $token]);
 
         if (!$user) {
             dd($token, $user);

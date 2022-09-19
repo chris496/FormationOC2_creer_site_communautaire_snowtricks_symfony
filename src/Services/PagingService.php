@@ -3,21 +3,28 @@
 namespace App\Services;
 
 use App\Repository\TricksRepository;
-use Symfony\Component\HttpFoundation\Request;
+use App\Repository\CommentRepository;
 
 class PagingService
 {
-    public function __construct(Request $request, TricksRepository $repository)
+    public function __construct(TricksRepository $tricksRepository, CommentRepository $commentRepository)
     {
-        $this->request = $request;
-        $this->repository = $repository;
+        $this->tricksRepository = $tricksRepository;
+        $this->commentRepository = $commentRepository;
     }
 
-    public function paging($page, $limit)
+    public function pagingTricks($page, $limit, $pagingType, $request)
     {
-        $pages = (int)$this->request->query->get("page", $page);
-        dd($pages);
-        $paging = $this->repository->getPaginatedTricks($pages, $limit);
+        $pages = (int)$request->query->get("page", $page);
+        $paging = $this->tricksRepository->$pagingType($pages, $limit);
+
+        return $paging;
+    }
+
+    public function pagingComment($id, $page, $limit, $pagingType, $request)
+    {
+        $pages = (int)$request->query->get("page", $page);
+        $paging = $this->commentRepository->$pagingType($id, $pages, $limit);
 
         return $paging;
     }

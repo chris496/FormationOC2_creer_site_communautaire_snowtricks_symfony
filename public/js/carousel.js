@@ -1,4 +1,3 @@
-
 const swiper = new Swiper('.swiper', {
     // Optional parameters
     slidesPerView: 6,

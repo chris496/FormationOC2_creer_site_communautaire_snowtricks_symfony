@@ -38,47 +38,7 @@
 
             <div class="card-body">
                 <div class="row test_body">
-                    <div class="swiper">
-                        <div class="swiper-wrapper">
-                        {% for media in tricks.medias %}
-                            <div class="swiper-slide">
-                                <div class="d-flex flex-column">
-                                    <img class="diapo me-2" src="{{ asset('/uploads/'~media.name) }}" alt="">   
-                                    {% if app.user %}                                 
-                                    <div class="d-flex justify-content-around bord me-2">
-                                        <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
-                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        {% endfor %}
-                        {% for url in tricks.urls %}
-                            <div class="swiper-slide">
-                                <div class="d-flex flex-column">
-                                    <embed class="diapo me-2" type="video/webm" src="{{ video(url.url) }}">
-                                    {% if app.user %}                                 
-                                    <div class="d-flex justify-content-around bord me-2">
-                                        <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>
-                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        <!-- If we need pagination -->
-                        <div class="swiper-pagination"></div>
-                    
-                        <!-- If we need navigation buttons -->
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
-                    
-                    </div>
+                    {% include "tricks/_carousel.html.twig" %}
                 </div> 
                 <div class="mb-3">
                     {{ form_widget(formEditTricks.content) }}
@@ -164,34 +124,5 @@
 {% endblock %}
 
 {% block javascripts %}
-<script>
-const swiper = new Swiper('.swiper', {
-    // Optional parameters
-    slidesPerView: 6,
-    slidesPerColumn: 2,
-    spaceBetween: 30,
-    navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-    breakpoints: {
-        640: {
-          slidesPerView: 1,
-          spaceBetween: 20,
-        },
-        768: {
-          slidesPerView: 2,
-          spaceBetween: 40,
-        },
-        1024: {
-          slidesPerView: 4,
-          spaceBetween: 30,
-        },
-        1600: {
-            slidesPerView: 6,
-            spaceBetween: 30,
-          },
-    },
-  });
-</script>
+<script src="/js/carousel.js"></script>
 {% endblock %}

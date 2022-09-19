@@ -4,9 +4,7 @@
 
 {% block body %}
     <div class="container-fluid">
-        {% for message in app.flashes('success') %}
-            <p class="text-center p-3 mb-2 bg-success text-white">{{ message }}</p>
-        {% endfor %} 
+        {% include '_alertMessage.html.twig' %}
         <div class="row">
             <div class="col p-0 maintxt">
                 <img class="home img-fluid img-responsive" src="./img/home2.jpg" alt="home-snow" style="width: 100%;">
@@ -23,9 +21,10 @@
                                 {% for media in allTrick.medias %} 
                                     {% if media.favorite == 1 %}
                                         <img src="{{ asset('/uploads/'~media.name) }}" class="himg card-img-top" alt="...">
-                                    {% endif %}                                  
+                                    {% endif %} 
+                                {% endfor %}                                 
                             {% else %}
-                                <img src="{{ asset('/uploads/default.png') }}" class="himg card-img-top" alt="...">{% endfor %} 
+                                <img src="{{ asset('/uploads/default.jpg') }}" class="himg card-img-top" alt="..."> 
                             {% endif %}
                             <div class="card-body d-flex justify-content-center">
                                 <div class="d-flex justify-content-between align-items-center">

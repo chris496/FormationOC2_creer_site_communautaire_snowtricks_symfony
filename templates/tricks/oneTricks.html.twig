@@ -4,6 +4,7 @@
 
 {% block body %}
     <div class="my-3 container">
+         {% include '_alertMessage.html.twig' %}
         <div class="card border-primary rounded my-5">
 
             <div class="card_header">
@@ -30,67 +31,9 @@
 
             <div class="card-body">
                 <div class="row test_body">
-                    <div class="swiper">
-                        <div class="swiper-wrapper">
-                        {% for media in tricks.medias %}
-                            <div class="swiper-slide">
-                                <div class="d-flex flex-column">
-                                    <img class="diapo me-2" src="{{ asset('/uploads/'~media.name) }}" alt="">   
-                                    {% if app.user %}                                 
-                                    <div class="d-flex justify-content-around bord me-2">
-                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#favoriteMedia{{ media.id }}">
-                                        <i class="fa-solid fa-pencil"></i>
-                                    </button>
-                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia{{ media.id }}">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        {% endfor %}
-                        {% for url in tricks.urls %}
-                            <div class="swiper-slide">
-                                <div class="d-flex flex-column">
-                                    <embed class="diapo me-2" type="video/webm" src="{{ video(url.url) }}">
-                                    {% if app.user %}                       
-                                    <div class="d-flex justify-content-around bord me-2">
-                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia{{ url.id }}">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            {% endfor %}
-                        </div>
-                        <!-- If we need pagination -->
-                        <div class="swiper-pagination"></div>
-                    
-                        <!-- If we need navigation buttons -->
-                        <div class="swiper-button-prev"></div>
-                        <div class="swiper-button-next"></div>
-                    
-                    </div>
-                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl">
-                        
-                    </div>
+                    {% include "tricks/_carousel.html.twig" %}
                 </div> 
-                <hr> 
-                <div class="row">
-                    <p class="p-5">{{ tricks.content }}</p>
-                </div>  
-                <div class="mb-4 row justify-content-center">
-                    <div class="col-auto">
-                        <div class="me-2 badge bg-success">{{ tricks.createdat | date('d/m/Y H:i') }}</div>
-                    </div>
-                    <div class="col-auto">
-                        <div class="me-2 badge bg-warning">{{ tricks.updatedat | date('d/m/Y H:i') }}</div>
-                    </div>
-                    <div class="col-auto">
-                        <div class="badge bg-primary">{{ tricks.category.name }}</div>
-                    </div>
-                </div> 
+                {% include "tricks/_content.html.twig" %}
                 {% if app.user %}
                 <hr>
                 <div class="row d-flex justify-content-center">
@@ -104,17 +47,7 @@
                     <div class="newComment d-flex flex-column align-items-start">
                         <div>
                             {% for allcomment in allcomments %}
-                            <div class="d-flex align-items-center">
-                                <div class="me-2 p-3">
-                                    <img src="{{ avatar }}" class="avatar card-img-top img-fluid rounded mb-4 mb-lg-0" alt="picture">
-                                </div>
-                                <div class="mb-2 p-3 border shadow">
-                                    {{ allcomment.content }}            
-                                </div>   
-                            </div>
-                            <div class="com_date mb-2 p-1 border text-center">
-                                {{ allcomment.createdat | date('d/m/Y H:i') }}
-                            </div>
+                                {% include "tricks/_comment.html.twig" %}
                             {% endfor %}
                         </div>
                     </div>
@@ -212,39 +145,9 @@
 
 
 {% block javascripts %}
-<script>
-const swiper = new Swiper('.swiper', {
-    // Optional parameters
-    slidesPerView: 6,
-    slidesPerColumn: 2,
-    spaceBetween: 30,
-    navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
-    breakpoints: {
-        640: {
-          slidesPerView: 1,
-          spaceBetween: 20,
-        },
-        768: {
-          slidesPerView: 2,
-          spaceBetween: 40,
-        },
-        1024: {
-          slidesPerView: 4,
-          spaceBetween: 30,
-        },
-        1600: {
-            slidesPerView: 6,
-            spaceBetween: 30,
-          },
-    },
-  });
+<script src="/js/carousel.js"></script>
 
-</script>
-
-    <script>
+    <script >
         const newComment = document.querySelector('.newComment')
         const seeMore = document.querySelector('#seeMore')
         const slug = document.getElementById("slug").innerHTML
@@ -253,7 +156,6 @@ const swiper = new Swiper('.swiper', {
         seeMore.addEventListener('click', (e)=>{
             e.preventDefault()
             const cpt = num++
-            //let url = Routing.generate('see_more', {'page' : yep});
             let url = '{{ path("see_more_comment", {'slug' : 'slug', 'page': 'page'}) }}'; 
             url = url.replace("slug", slug);
             url = url.replace("page", cpt);
@@ -265,6 +167,18 @@ const swiper = new Swiper('.swiper', {
                             console.log(el)
                             let newp = document.createElement('p')
                             newp.innerHTML = `
+                                <div class="d-flex align-items-center">
+                                    <div class="me-2 p-3">
+                                        <img src="" class="avatar card-img-top img-fluid rounded mb-4 mb-lg-0" alt="picture">
+                                    </div>
+                                    <div class="mb-2 p-3 border shadow">
+                                        ${el.content}          
+                                    </div>   
+                                </div>
+                                <div class="com_date mb-2 p-1 border text-center">
+                                    <!--<strong>${el.user.firstname}</strong> ${el.date | date('d/m/Y H:i')}-->
+                                </div>
+
                                 <div class="d-flex align-items-center">
                                     <div class="me-2 p-3">
                                         <img src="/img/avatar.png" class="avatar card-img-top img-fluid rounded mb-4 mb-lg-0" alt="picture">

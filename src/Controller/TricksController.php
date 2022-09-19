@@ -2,8 +2,6 @@
 
 namespace App\Controller;
 
-use DateTime;
-use App\Entity\User;
 use App\Entity\Media;
 use App\Entity\Tricks;
 use DateTimeImmutable;
@@ -13,40 +11,40 @@ use App\Form\CreateTricksType;
 use App\Services\VideoService;
 use App\Form\CommentTricksType;
 use App\Services\PagingService;
-use Doctrine\ORM\EntityManager;
 use App\Services\GravatarService;
-use App\Repository\UserRepository;
 use App\Repository\MediaRepository;
 use App\Repository\TricksRepository;
 use App\Repository\CommentRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\Id;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TricksController extends AbstractController
 {
-    public $em;
+    //public $em;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, PagingService $pagingservice, MediaRepository $mediaRepository, TricksRepository $tricksrepository, SluggerInterface $slugger, VideoService $multiVideo, CommentRepository $commentRepository, GravatarService $gravatar)
     {
         $this->em = $em;
+        $this->pagingservice = $pagingservice;
+        $this->mediaRepository = $mediaRepository;
+        $this->tricksrepository = $tricksrepository;
+        $this->slugger = $slugger;
+        $this->multiVideo = $multiVideo;
+        $this->commentRepository = $commentRepository;
+        $this->gravatar = $gravatar;
     }
     
     /**
      * @Route("/", name="home")
      */
-    public function index(TricksRepository $repository, Request $request): Response
+    public function index(Request $request): Response
     {
-        $limit = 15;
-        $page = (int)$request->query->get("page", 1);
-        $allTricks = $repository->getPaginatedTricks($page, $limit);
-        //$allTricks = $pagingservice->paging(1, 15);
-        //dd($allTricks);
+        $allTricks = $this->pagingservice->pagingTricks(1, 15, 'getPaginatedTricks', $request);
+
         return $this->render('tricks/index.html.twig', [
             'allTricks' => $allTricks
         ]);
@@ -55,14 +53,13 @@ class TricksController extends AbstractController
     /**
      * @Route("/paging/{page}", name="see_more")
      */
-    public function pagingTricks(int $page, MediaRepository $mediaRepo, TricksRepository $repository, Request $request): Response
+    public function pagingTricks(int $page, Request $request): Response
     {
-        $limit = 5;
-        $page = (int)$request->query->get("page", $page);
-        $allTricks = $repository->getPaginatedTricks($page, $limit);
+        $allTricks = $this->pagingservice->pagingTricks($page, 5, 'getPaginatedTricks', $request);
+
         $array = [];
         foreach ($allTricks as $tricks) {
-            $media = ($mediaRepo->findOneBy([
+            $media = ($this->mediaRepository->findOneBy([
                 'tricks' => $tricks,
                 'favorite' => true
             ]));
@@ -84,9 +81,9 @@ class TricksController extends AbstractController
     /**
      * @Route("/tricks", name="allTricks")
      */
-    public function allTricks(TricksRepository $repository): Response
+    public function allTricks(): Response
     {
-        $allTricks = $repository->findAll();
+        $allTricks = $this->tricksrepository->findAll();
 
         return $this->render('tricks/allTricks.html.twig', [
             'allTricks' => $allTricks
@@ -96,7 +93,7 @@ class TricksController extends AbstractController
     /**
      * @Route("/newTricks", name="newTricks")
      */
-    public function newTricks(Request $request, SluggerInterface $slugger, VideoService $multiVideo)
+    public function newTricks(Request $request)
     {
         $newTricks = new Tricks();
         $form = $this->createForm(CreateTricksType::class, $newTricks);
@@ -120,7 +117,7 @@ class TricksController extends AbstractController
                 $newTricks->addMedia($img);
             }
             if($urlVideo = $form->get('urls')->getData()){
-                $mvideos = $multiVideo->multi_video($urlVideo);
+                $mvideos = $this->multiVideo->multi_video($urlVideo);
                 foreach ($mvideos as $mvideo) {
                     $video = new Media();
                     $video->setName('video')
@@ -128,7 +125,7 @@ class TricksController extends AbstractController
                     $newTricks->addUrl($video);
                 }
             }
-            $newTricks->setSlug(strtolower($slugger->slug($form->get('title')->getData())))
+            $newTricks->setSlug(strtolower($this->slugger->slug($form->get('title')->getData())))
                     ->setCreatedAt(new DateTimeImmutable())
                     ->setUser($this->getUser());
             $this->em->persist($newTricks);
@@ -146,9 +143,9 @@ class TricksController extends AbstractController
     /**
      * @Route("/editTricks/{id<\d+>}", name="editTricks")
      */
-    public function editTricks(Request $request, Tricks $tricks, MediaRepository $mediaRepository, VideoService $multiVideo)
+    public function editTricks(Request $request, Tricks $tricks)
     {
-        $favorite = $mediaRepository->findOneBy(['tricks' => $tricks, 'favorite' => 1]);
+        $favorite = $this->mediaRepository->findOneBy(['tricks' => $tricks, 'favorite' => 1]);
         $form = $this->createForm(EditTricksType::class, $tricks);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -164,7 +161,7 @@ class TricksController extends AbstractController
                 $tricks->addMedia($img);
             }
             if($urlVideo = $form->get('urls')->getData()){
-                $mvideos = $multiVideo->multi_video($urlVideo);
+                $mvideos = $this->multiVideo->multi_video($urlVideo);
                 foreach ($mvideos as $mvideo) {
                     $video = new Media();
                     $video->setName('video')
@@ -202,6 +199,7 @@ class TricksController extends AbstractController
         }
         $this->em->remove($tricks);
         $this->em->flush();
+        $this->addFlash('danger', 'Votre tricks a été supprimé !!');
 
         return $this->redirectToRoute(('home'));
     }
@@ -209,10 +207,10 @@ class TricksController extends AbstractController
     /**
      * @Route("/tricks/{slug}/favoriteMedia/{id<\d+>}", name="favoriteMedia")
      */
-    public function favoriteMedia(string $slug, MediaRepository $mediaRepository, TricksRepository $tricksRepository, int $id)
+    public function favoriteMedia(string $slug, int $id)
     {
-        $trick = $tricksRepository->findOneBy(['slug' => $slug]);
-        $med = $mediaRepository->findOneBy(['tricks' => $trick, 'id' => $id]);
+        $trick = $this->tricksrepository->findOneBy(['slug' => $slug]);
+        $med = $this->mediaRepository->findOneBy(['tricks' => $trick, 'id' => $id]);
         foreach ($trick->getMedias() as $media) {
             $media->setFavorite(false);
             $this->em->persist($media);
@@ -220,6 +218,7 @@ class TricksController extends AbstractController
         $med->setFavorite(true);
         $this->em->persist($med);
         $this->em->flush();
+        $this->addFlash('success', 'Votre image favorite à changé !!');
 
         return $this->redirectToRoute('oneTricks', ['slug'=> $trick->getSlug()]);
     }
@@ -235,6 +234,7 @@ class TricksController extends AbstractController
         }
         $this->em->remove($media);
         $this->em->flush();
+        $this->addFlash('success', 'Ce média vient d\'être supprimé !!');
 
         return $this->redirectToRoute(('home'));
     }
@@ -242,11 +242,11 @@ class TricksController extends AbstractController
     /**
      * @Route("/tricks/{slug}", name="oneTricks")
      */
-    public function oneTricks(string $slug, Request $request, CommentRepository $repository, TricksRepository $tricksRepository, MediaRepository $mediaRepository, GravatarService $gravatar, UserRepository $userRepository)
+    public function oneTricks(string $slug, Request $request)
     {
         $user = $this->getUser();
-        $trick = $tricksRepository->findOneBy(['slug' => $slug]);
-        $favorite = $mediaRepository->findOneBy(['tricks' => $trick, 'favorite' => 1]);
+        $trick = $this->tricksrepository->findOneBy(['slug' => $slug]);
+        $favorite = $this->mediaRepository->findOneBy(['tricks' => $trick, 'favorite' => 1]);
         $newComment = new Comment();
         $form = $this->createForm(CommentTricksType::class, $newComment);
         $form->handleRequest($request);
@@ -261,11 +261,9 @@ class TricksController extends AbstractController
 
             return $this->redirectToRoute('oneTricks', ['slug'=> $trick->getSlug()]);
         }
-        $limit = 4;
-        $page = (int)$request->query->get("page", 1);
         $id = $trick->getId();
-        $allComments = $repository->getPaginatedComment($id, $page, $limit);
-        $avatar = $gravatar->get_gravatar('form', 80, 'mp', 'g', false, array());
+        $allComments = $this->pagingservice->pagingComment($id, 1, 5, 'getPaginatedComment', $request);
+        $avatar = $this->gravatar->get_gravatar('form', 80, 'mp', 'g', false, array());
 
         return $this->render('tricks/oneTricks.html.twig', [
             'formNewComment' => $form->createView(),
@@ -279,14 +277,20 @@ class TricksController extends AbstractController
     /**
      * @Route("/tricks/{slug}/pagingComment/{page}", name="see_more_comment")
      */
-    public function pagingComment(string $slug, int $page, CommentRepository $repository, Request $request, TricksRepository $tricksRepository): Response
+    public function pagingComment(string $slug, int $page, Request $request): Response
     {
-        $trick = $tricksRepository->findOneBy(['slug' => $slug]);
-        $limit = 5;
-        $page = (int)$request->query->get("page", $page);
+        $trick = $this->tricksrepository->findOneBy(['slug' => $slug]);
         $id = $trick->getId();
-        $allComments = $repository->getPaginatedComment($id, $page, $limit);
-
-        return $this->json($allComments, 200, [], ['groups' => 'comment:read']);
+        $allComments = $this->pagingservice->pagingComment($id, $page, 5, 'getPaginatedComment', $request);
+        $array = [];
+        foreach ($allComments as $comments) {
+            $array[]=[
+                'user' => $comments->getUser(),
+                'content' => $comments->getContent(),
+                'date' => $comments->getCreatedAt()
+            ];
+        }
+        
+        return $this->json($array, 200, [], ['groups' => 'comment:read']);
     }
 }
