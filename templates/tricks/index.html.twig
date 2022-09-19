@@ -17,7 +17,7 @@
                 {% for allTrick in allTricks %}            
                     <div class="col">
                         <div class="card">
-                            {% if allTrick.medias is not empty %}
+                            {% if allTrick.medias %}
                                 {% for media in allTrick.medias %} 
                                     {% if media.favorite == 1 %}
                                         <img src="{{ asset('/uploads/'~media.name) }}" class="himg card-img-top" alt="...">
@@ -86,7 +86,7 @@
                 ).then(
                     data => {
                         data.forEach(el => {
-                            console.log("yop", el)
+                            console.log("yop", el.favorite)
                             let newP = document.createElement('p')
                             newP.innerHTML = `
                             <div class="col">

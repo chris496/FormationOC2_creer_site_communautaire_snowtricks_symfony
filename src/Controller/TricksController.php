@@ -46,7 +46,7 @@ class TricksController extends AbstractController
         $allTricks = $this->pagingservice->pagingTricks(1, 15, 'getPaginatedTricks', $request);
 
         return $this->render('tricks/index.html.twig', [
-            'allTricks' => $allTricks
+            'allTricks' => $allTricks,
         ]);
     }
 
@@ -69,12 +69,13 @@ class TricksController extends AbstractController
                 'title' => $tricks->getTitle(),
                 'content' => $tricks->getContent(),
                 'slug' => $tricks->getSlug(),
-                'medias' => $media ? $media->getName() : "/default.jpg",
+                'medias' => $media ? $media->getName() : "default.jpg",
                 'tricks' => $this->generateUrl('oneTricks', ['slug' => $tricks->getSlug()]),
                 'editTricks' => $this->generateUrl('editTricks', ['id' => $tricks->getId()]),
                 'delete' => $tricks->getId()
             ];
         }
+
         return $this->json($array, 200, [], ['groups' => 'tricks:read']);
     }
 
