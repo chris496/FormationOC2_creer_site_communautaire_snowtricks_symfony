@@ -54,7 +54,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/reset-pass", name="forget_password")
      */
-    public function forgetPass(Request $request, TokenGeneratorInterface $tokenGenerator, MailerInterface $mailer)
+    public function forgetPass(Request $request, TokenGeneratorInterface $tokenGenerator, MailerService $mailer)
     {
         $form = $this->createForm(ResetPassType::class);
         $form->handleRequest($request);
@@ -79,8 +79,11 @@ class SecurityController extends AbstractController
                 $this->addFlash('warning', $e->getMessage());
                 return $this->redirectToRoute('app_login');
             }
+            $this->addFlash('danger', 'yop');
             $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
-            $email = (new TemplatedEmail())
+            $mailer->sendMail($user->getEmail(), 'Reset !', 'emails/reset_pass.html.twig', ['token' => $token,
+            'url' => $url]);
+            /*$email = (new TemplatedEmail())
                 ->from('formationoc@christophedumas1.fr')
                 ->to($user->getEmail())
                 ->subject('Reset !')
@@ -92,7 +95,7 @@ class SecurityController extends AbstractController
                     'url' => $url
                 ])
             ;
-            $mailer->send($email);
+            $mailer->send($email);*/
         }
 
         return $this->render('security/forget_password.html.twig', [
@@ -112,8 +115,8 @@ class SecurityController extends AbstractController
             $this->addFlash('danger', 'Token Inconnu');
             return $this->redirectToRoute('forget_password');
         }
-        //if ($request->isMethod('POST')) {
-           // dd($user);
+        if ($request->isMethod('POST')) {
+           dd($user);
             $user->setResetToken(null);
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
@@ -127,9 +130,9 @@ class SecurityController extends AbstractController
             $this->addFlash('message', 'Mot de passe mis à jour');
 
             return $this->redirectToRoute('app_login');
-       // } else {
+        } else {
             // Si on n'a pas reçu les données, on affiche le formulaire
-           // return $this->render('security/reset_password.html.twig', ['token' => $token]);
-        //}
+           return $this->render('security/reset_password.html.twig', ['token' => $token]);
+        }
     }
 }

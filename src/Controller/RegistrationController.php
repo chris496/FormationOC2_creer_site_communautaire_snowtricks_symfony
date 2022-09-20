@@ -46,9 +46,11 @@ class RegistrationController extends AbstractController
             $user->setCreatedAt(new DateTimeImmutable());
             $this->em->persist($user);
             $this->em->flush();
-            $mailer->sendMail($user->getEmail(), $user->getActivationToken());
+            $mailer->sendMail($user->getEmail(), 'Merci pour votre inscription !', 'emails/registration.html.twig', [
+                'token' => $user->getActivationToken(),
+            ]);
             // do anything else you need here, like send an email
-            $this->addFlash('success', 'Merci d\'activer votre nouveau compte par mail !!');
+            $this->addFlash('warning', 'Merci d\'activer votre nouveau compte par mail !!');
             return $this->redirectToRoute('app_login');
             /*return $userAuthenticator->authenticateUser(
                 $user,

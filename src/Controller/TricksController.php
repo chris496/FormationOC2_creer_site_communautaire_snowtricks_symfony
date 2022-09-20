@@ -225,6 +225,21 @@ class TricksController extends AbstractController
     }
 
     /**
+     * @Route("/tricks/{slug}/deleteFavoriteMedia/{id<\d+>}", name="deleteFavoriteMedia")
+     */
+    public function deleteFavoriteMedia(string $slug, int $id)
+    {
+        $trick = $this->tricksrepository->findOneBy(['slug' => $slug]);
+        $med = $this->mediaRepository->findOneBy(['tricks' => $trick, 'id' => $id]);
+        $med->setFavorite(false);
+        $this->em->persist($med);
+        $this->em->flush();
+        $this->addFlash('success', 'Votre image favorite à été supprimé !!');
+
+        return $this->redirectToRoute('oneTricks', ['slug'=> $trick->getSlug()]);
+    }
+
+    /**
      * @Route("/deleteMedia/{id}", name="editDeleteMedia")
      */
     public function deleteMedia(Media $media)
@@ -264,7 +279,7 @@ class TricksController extends AbstractController
         }
         $id = $trick->getId();
         $allComments = $this->pagingservice->pagingComment($id, 1, 5, 'getPaginatedComment', $request);
-        $avatar = $this->gravatar->get_gravatar('form', 80, 'mp', 'g', false, array());
+        $avatar = $this->gravatar->get_gravatar('form', 80, 'retro', 'g', false, array());
 
         return $this->render('tricks/oneTricks.html.twig', [
             'formNewComment' => $form->createView(),

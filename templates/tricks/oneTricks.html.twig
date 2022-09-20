@@ -22,16 +22,62 @@
                     <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#favoriteMedia">
                         <i class="fa-solid fa-pencil"></i>
                     </button>
-                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
+                    {% if favorite %}
+                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteFavoriteMedia{{ favorite.id }}">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
+                    {% endif %}
                 </div>
                 {% endif %}      
             </div>
 
             <div class="card-body">
                 <div class="row test_body">
-                    {% include "tricks/_carousel.html.twig" %}
+                    <div class="swiper">
+                        <div class="swiper-wrapper">
+                        {% for media in tricks.medias %}
+                            <div class="swiper-slide">
+                                <div class="d-flex flex-column">
+                                    <img class="diapo me-2" src="{{ asset('/uploads/'~media.name) }}" alt="">   
+                                    {% if app.user %}                                 
+                                    <div class="d-flex justify-content-around bord me-2">
+                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#favoriteMedia{{ media.id }}">
+                                        <i class="fa-solid fa-pencil"></i>
+                                    </button>
+                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia{{ media.id }}">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% for url in tricks.urls %}
+                            <div class="swiper-slide">
+                                <div class="d-flex flex-column">
+                                    <embed class="diapo me-2" type="video/webm" src="{{ video(url.url) }}">
+                                    {% if app.user %}                       
+                                    <div class="d-flex justify-content-around bord me-2">
+                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia{{ url.id }}">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <!-- If we need pagination -->
+                        <div class="swiper-pagination"></div>
+                    
+                        <!-- If we need navigation buttons -->
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl">
+                        
+                    </div>
                 </div> 
                 {% include "tricks/_content.html.twig" %}
                 {% if app.user %}
@@ -80,8 +126,29 @@
             </div>
         </div>
     </div>
-{% endfor %}  
+{% endfor %} 
 
+ <!-- Modal -->
+    {% if favorite %}
+    <div class="modal fade" id="deleteFavoriteMedia{{ favorite.id }}" tabindex="-1" aria-labelledby="deleteFavoriteMediaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <h5>Voulez-vous vraiment supprimer ce média comme favoris ?</h5>
+                </div>
+                <div class="modal-footer d-flex flex-column">
+                 
+                     
+                    <div class="me-2 d-flex flex-column align-items-center">
+                        <a href="{{ path('deleteFavoriteMedia', {'id' : favorite.id, 'slug' : tricks.slug}) }}">confirmer</a>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
 <!-- Modal -->{% for url in tricks.urls %}
     <div class="modal fade" id="deleteMedia{{ url.id }}" tabindex="-1" aria-labelledby="deleteMediaLabel" aria-hidden="true">
         <div class="modal-dialog">
