@@ -1,15 +1,15 @@
 {% for message in app.flashes('success') %}
-    <p class="text-center p-3 mb-2 bg-success text-white">{{ message }}</p>
+	<p class="text-center p-3 mb-2 bg-success text-white">{{ message }}</p>
 {% endfor %}
 
 {% for message in app.flashes('message') %}
-    <p class="text-center p-3 mb-2 bg-primary text-white">{{ message }}</p>
+	<p class="text-center p-3 mb-2 bg-primary text-white">{{ message }}</p>
 {% endfor %}
 
 {% for message in app.flashes('danger') %}
-    <p class="text-center p-3 mb-2 bg-danger text-white">{{ message }}</p>
-{% endfor %} 
+	<p class="text-center p-3 mb-2 bg-danger text-white">{{ message }}</p>
+{% endfor %}
 
 {% for message in app.flashes('warning') %}
-    <p class="text-center p-3 mb-2 bg-warning text-white">{{ message }}</p>
+	<p class="text-center p-3 mb-2 bg-warning text-white">{{ message }}</p>
 {% endfor %}

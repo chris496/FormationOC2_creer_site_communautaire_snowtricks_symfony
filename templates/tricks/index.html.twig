@@ -1,108 +1,122 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Blog - SnowTricks{% endblock %}
-
-{% block body %}
-    <div class="container-fluid">
-        {% include '_alertMessage.html.twig' %}
-        <div class="row">
-            <div class="col p-0 maintxt">
-                <img class="home img-fluid img-responsive" src="./img/home2.jpg" alt="home-snow" style="width: 100%;">
-                <h1 id="accroche">Bienvenue sur Snow Tricks !!</h1>
-                <a class="overlay-text text-white" href="#card-snow"><i class="bg-transparent border-0 btn btn-primary fa-solid fa-circle-arrow-down fa-2xl"></i></a>
-            </div>            
-        </div>
-        <div id="card-snow" class="container-fluid mt-3 mb-3 pt-5 px-5">
-            <div class="newCard row row-cols-1 row-cols-md-5 g-4">
-                {% for allTrick in allTricks %}            
-                    <div class="col">
-                        <div class="card">
-                            {% if allTrick.medias is not empty %}
-                                {% for media in allTrick.medias %} 
-                                    {% if media.favorite == 1 %}
-                                        <img src="{{ asset('/uploads/'~media.name) }}" class="himg card-img-top" alt="...">
-                                    {% endif %} 
-                                {% endfor %}                                 
-                            {% else %}
-                                <img src="{{ asset('/uploads/default.jpg') }}" class="himg card-img-top" alt="..."> 
-                            {% endif %}
-                            <div class="card-body d-flex justify-content-center">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <a class="" href="{{ path('oneTricks', {'slug' : allTrick.slug}) }}"><h5 class="card-title">{{allTrick.title}}</h5></i></a>
-                                    {% if app.user %}
-                                        <a class="btn border-0 bg-transparent" href="{{ path('editTricks', {'id' : allTrick.id}) }}"><i class="fa-solid fa-pencil"></i></a>
-                                        <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks{{ allTrick.id }}">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                    </div>  
-
-                    <!-- Modal -->
-                    <div class="modal fade" id="deleteTricks{{ allTrick.id }}" tabindex="-1" aria-labelledby="deleteTricksLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-body text-center">
-                                    <h5>Voulez-vous vraiment supprimer cette figure ?</h5>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                    <a href="{{ path('deleteTricks', {'id' : allTrick.id}) }}" class="btn btn-danger">Confirmer</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>         
-                {% endfor %}
-            </div>   
-        </div>
-        <div class="row mt-2 mb-5 me-0">
-            <div class="col d-flex justify-content-end">
-                <a class="" href="#card-snow"><i class="fa-solid fa-circle-arrow-up fa-2xl"></i></a>
-            </div>
-        </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col text-center">
-            <button id="seeMore" class="btn btn-primary">Voir plus de tricks</button>
-        </div>
-    </div>
+{% block title %}Blog - SnowTricks
 {% endblock %}
 
-{% block javascripts %}
-    <script>
-        const newCard = document.querySelector('.newCard')
-        const seeMore = document.querySelector('#seeMore')
-        let num = 4
+{% block body %}
+	<div class="container-fluid">
+		{% include '_alertMessage.html.twig' %}
+		<div class="row">
+			<div class="col p-0 maintxt">
+				<img class="home img-fluid img-responsive" src="./img/home2.jpg" alt="home-snow" style="width: 100%;">
+				<h1 id="accroche">Bienvenue sur Snow Tricks !!</h1>
+				<a class="overlay-text text-white" href="#card-snow">
+					<i class="bg-transparent border-0 btn btn-primary fa-solid fa-circle-arrow-down fa-2xl"></i>
+				</a>
+			</div>
+		</div>
+		<div id="card-snow" class="container-fluid mt-3 mb-3 pt-5 px-5">
+			<div class="newCard row row-cols-1 row-cols-md-5 g-4">
+				{% for allTrick in allTricks %}
+					<div class="col">
+						<div class="card">
+							{% if allTrick.medias is not empty %}
+								{% for media in allTrick.medias %}
+									{% if media.favorite == 1 %}
+										<img src="{{ asset('/uploads/'~media.name) }}" class="himg card-img-top" alt="...">
+									{% endif %}
+								{% endfor %}
+							{% else %}
+								<img src="{{ asset('/uploads/default.jpg') }}" class="himg card-img-top" alt="...">
+							{% endif %}
+							<div class="card-body d-flex justify-content-center">
+								<div class="d-flex justify-content-between align-items-center">
+									<a class="" href="{{ path('oneTricks', {'slug' : allTrick.slug}) }}">
+										<h5 class="card-title">{{allTrick.title}}</h5>
+									</i>
+								</a>
+								{% if app.user %}
+									<a class="btn border-0 bg-transparent" href="{{ path('editTricks', {'id' : allTrick.id}) }}">
+										<i class="fa-solid fa-pencil"></i>
+									</a>
+									<button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks{{ allTrick.id }}">
+										<i class="fa-solid fa-trash-can"></i>
+									</button>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
 
-        seeMore.addEventListener('click', (e)=>{
-            e.preventDefault()
-            const addnum = num++
-            let url = '{{ path("see_more", {'page': 'page'}) }}'; 
-            url = url.replace("page", addnum);
-            fetch((url)).then(
-                    response => response.json()
-                ).then(
-                    data => {
-                        data.forEach(el => {
-                            console.log("yop", el)
-                            let newP = document.createElement('p')
-                            newP.innerHTML = `
+				<!-- Modal -->
+				<div class="modal fade" id="deleteTricks{{ allTrick.id }}" tabindex="-1" aria-labelledby="deleteTricksLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-body text-center">
+								<h5>Voulez-vous vraiment supprimer cette figure ?</h5>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+								<a href="{{ path('deleteTricks', {'id' : allTrick.id}) }}" class="btn btn-danger">Confirmer</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="row mt-2 mb-5 me-0">
+		<div class="col d-flex justify-content-end">
+			<a class="" href="#card-snow">
+				<i class="fa-solid fa-circle-arrow-up fa-2xl"></i>
+			</a>
+		</div>
+	</div>
+</div>
+<div class="row mb-4">
+	<div class="col text-center">
+		<button id="seeMore" class="btn btn-primary">Voir plus de tricks</button>
+	</div>
+</div>{% endblock %}{% block javascripts %}
+<script>
+	const newCard = document.querySelector('.newCard')
+const seeMore = document.querySelector('#seeMore')
+let num = 4
+
+seeMore.addEventListener('click', (e) => {
+e.preventDefault()
+const addnum = num++
+let url = '{{ path("see_more", {'page': 'page'}) }}';
+url = url.replace("page", addnum);
+fetch((url)).then(response => response.json()).then(data => {
+data.forEach(el => {
+console.log("yop", el)
+let newP = document.createElement('p')
+newP.innerHTML = `
                             <div class="col">
                                 <div class="card h-100 mt-3">
-                                    <img src="/uploads/${el.medias}" class="himg card-img-top" alt="...">
+                                    <img src="/uploads/${
+el.medias
+}" class="himg card-img-top" alt="...">
                                     <div class="card-body d-flex justify-content-center">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <a class="" href="${el.tricks}"><h5 class="card-title">${el.title}</h5></i></a>
-                                            <div id="${el.id}" class="d-flex"></div>
+                                            <a class="" href="${
+el.tricks
+}"><h5 class="card-title">${
+el.title
+}</h5></i></a>
+                                            <div id="${
+el.id
+}" class="d-flex"></div>
                                         </div>   
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Modal -->
-                            <div class="modal fade" id="deleteTricks${el.delete}" tabindex="-1" aria-labelledby="deleteTricksLabel" aria-hidden="true">
+                            <div class="modal fade" id="deleteTricks${
+el.delete
+}" tabindex="-1" aria-labelledby="deleteTricksLabel" aria-hidden="true">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-body text-center">
@@ -116,19 +130,23 @@
                                 </div>
                             </div>`
 
-                            newCard.append(newP);
-                            let user = document.getElementById(`${el.id}`)
-                            for (const property in el) {
-                                if(el.user == 1){
-                                    user.innerHTML = `
-                                    <a class="btn border-0 bg-transparent" href="${el.editTricks}"><i class="fa-solid fa-pencil"></i></a>            
-                                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks${el.delete}"><i class="fa-solid fa-trash-can"></i></button>
+newCard.append(newP);
+let user = document.getElementById (`${
+el.id
+}`)
+for (const property in el) {
+if (el.user == 1) {
+user.innerHTML = `
+                                    <a class="btn border-0 bg-transparent" href="${
+el.editTricks
+}"><i class="fa-solid fa-pencil"></i></a>            
+                                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteTricks${
+el.delete
+}"><i class="fa-solid fa-trash-can"></i></button>
                                     `
-                                }
-                            }
-                        })
-                    }
-                )
-        })   
-    </script>
-{% endblock %}
+}
+}
+})
+})
+})
+</script>{% endblock %}

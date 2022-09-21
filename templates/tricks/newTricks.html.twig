@@ -1,37 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer ton tricks !{% endblock %}
+{% block title %}Créer ton tricks !
+{% endblock %}
 
 {% block body %}
-    <div class="container-fluid">
-        <div class="row d-flex justify-content-center">
-            <div class="col-lg-5 m-5">
-                <h3 class="text-center mb-4">Création de votre tricks</h3>
-                <div class="border p-4">
-                    {{ form_start(formNewTricks) }}
-                    <div class="mb-3">
-                        {{ form_widget(formNewTricks.title) }}
-                        {{ form_errors(formNewTricks.title) }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form_widget(formNewTricks.content) }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form_row(formNewTricks.category) }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form_row(formNewTricks.medias) }}
-                    </div>
-                    <div class="mb-3">
-                        {{ form_row(formNewTricks.urls) }}
-                        <p>pour ajouter plusieurs videos, séparer chaque lien par une virgule</p>
-                    </div>
-                    <div class="text-end">
-                        {{ form_row(formNewTricks.save) }}
-                    </div>{{ form_end(formNewTricks) }}  
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
+	<div class="container-fluid">
+		<div class="row d-flex justify-content-center">
+			<div class="col-lg-5 m-5">
+				<h3 class="text-center mb-4">Création de votre tricks</h3>
+				<div class="border p-4">
+					{{ form_start(formNewTricks) }}
+					<div class="mb-3">
+						{{ form_widget(formNewTricks.title) }}
+						{{ form_errors(formNewTricks.title) }}
+					</div>
+					<div class="mb-3">
+						{{ form_widget(formNewTricks.content) }}
+					</div>
+					<div class="mb-3">
+						{{ form_row(formNewTricks.category) }}
+					</div>
+					<div class="mb-3">
+						{{ form_row(formNewTricks.medias) }}
+					</div>
+					<div class="mb-3">
+						{{ form_row(formNewTricks.urls) }}
+						<p>pour ajouter plusieurs videos, séparer chaque lien par une virgule</p>
+					</div>
+					<div class="text-end">
+						{{ form_row(formNewTricks.save) }}
+					</div>
+					{{ form_end(formNewTricks) }}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>{% endblock %}

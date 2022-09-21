@@ -26,19 +26,19 @@ class VideoExtension extends AbstractExtension
     //public function getVideo(?string $url): ?string
     public function getVideo(?string $url)
     {
-        
+
         //transforme url
         $urlUpdate = str_replace('http://', 'https://', $url);
 
         if (strpos($urlUpdate, 'youtube')) {
             $video = str_replace('www.youtube.com/watch?v=', 'www.youtube.com/embed/', $urlUpdate);
             $QueryPos = strpos($video, '&');
-            $newURI = substr($video, 0, -(strlen($video)-$QueryPos));
+            $newURI = substr($video, 0, - (strlen($video) - $QueryPos));
             return $newURI;
         }
 
         if (strpos($urlUpdate, 'youtu.be')) {
-            
+
             $video = str_replace('https://youtu.be/', 'https://www.youtube.com/embed/', $urlUpdate);
             return $video;
         }
@@ -46,21 +46,21 @@ class VideoExtension extends AbstractExtension
         if (strpos($urlUpdate, 'vimeo')) {
             //$videoId = str_replace('https://vimeo.com/', 'https://player.vimeo.com/video/', $urlUpdate);
             $video = str_replace('https://vimeo.com/', '', $urlUpdate);
-           $vimeoThumbs = 'http://vimeo.com/api/v2/video/' . $video . '.json';
+            $vimeoThumbs = 'http://vimeo.com/api/v2/video/' . $video . '.json';
 
-           //curl request
-           $curl = curl_init();
-           curl_setopt($curl, CURLOPT_URL, $vimeoThumbs);
-           curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-           $curlData = curl_exec($curl);
-           curl_close($curl);
+            //curl request
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $vimeoThumbs);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            $curlData = curl_exec($curl);
+            curl_close($curl);
 
-           $vimeoThumbs = json_decode($curlData, true);
-           dd($vimeoThumbs);
-           $videoId = $vimeoThumbs[0]['url'];
-           
-           $videoId = str_replace('http://', 'https://', $videoId);
-          
+            $vimeoThumbs = json_decode($curlData, true);
+            dd($vimeoThumbs);
+            $videoId = $vimeoThumbs[0]['url'];
+
+            $videoId = str_replace('http://', 'https://', $videoId);
+
             return $videoId;
         }
 

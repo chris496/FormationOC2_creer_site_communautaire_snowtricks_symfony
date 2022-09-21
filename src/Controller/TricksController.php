@@ -37,7 +37,7 @@ class TricksController extends AbstractController
         $this->commentRepository = $commentRepository;
         $this->gravatar = $gravatar;
     }
-    
+
     /**
      * @Route("/", name="home")
      */
@@ -63,7 +63,7 @@ class TricksController extends AbstractController
                 'tricks' => $tricks,
                 'favorite' => true
             ]));
-            $array[]=[
+            $array[] = [
                 'user' => $this->getUser() ? '1' : '0',
                 'id' => $tricks->getId(),
                 'title' => $tricks->getTitle(),
@@ -103,7 +103,7 @@ class TricksController extends AbstractController
             $images = $form->get('medias')->getData();
             $i = 0;
             foreach ($images as $image) {
-                $fichier = md5(uniqid()).'.'.$image->guessExtension();
+                $fichier = md5(uniqid()) . '.' . $image->guessExtension();
                 $image->move(
                     $this->getParameter('images_directory'),
                     $fichier
@@ -117,7 +117,7 @@ class TricksController extends AbstractController
                 $img->setName($fichier);
                 $newTricks->addMedia($img);
             }
-            if($urlVideo = $form->get('urls')->getData()){
+            if ($urlVideo = $form->get('urls')->getData()) {
                 $mvideos = $this->multiVideo->multi_video($urlVideo);
                 foreach ($mvideos as $mvideo) {
                     $video = new Media();
@@ -127,8 +127,8 @@ class TricksController extends AbstractController
                 }
             }
             $newTricks->setSlug(strtolower($this->slugger->slug($form->get('title')->getData())))
-                    ->setCreatedAt(new DateTimeImmutable())
-                    ->setUser($this->getUser());
+                ->setCreatedAt(new DateTimeImmutable())
+                ->setUser($this->getUser());
             $this->em->persist($newTricks);
             $this->em->flush();
             $this->addFlash('success', 'Votre nouveau tricks est crée !!');
@@ -152,7 +152,7 @@ class TricksController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $images = $form->get('medias')->getData();
             foreach ($images as $image) {
-                $fichier = md5(uniqid()).'.'.$image->guessExtension();
+                $fichier = md5(uniqid()) . '.' . $image->guessExtension();
                 $image->move(
                     $this->getParameter('images_directory'),
                     $fichier
@@ -161,7 +161,7 @@ class TricksController extends AbstractController
                 $img->setName($fichier);
                 $tricks->addMedia($img);
             }
-            if($urlVideo = $form->get('urls')->getData()){
+            if ($urlVideo = $form->get('urls')->getData()) {
                 $mvideos = $this->multiVideo->multi_video($urlVideo);
                 foreach ($mvideos as $mvideo) {
                     $video = new Media();
@@ -174,7 +174,7 @@ class TricksController extends AbstractController
             $this->em->flush();
             $this->addFlash('success', 'Votre tricks a été modifié !!');
 
-            return $this->redirectToRoute('oneTricks', ['slug'=> $tricks->getSlug()]);
+            return $this->redirectToRoute('oneTricks', ['slug' => $tricks->getSlug()]);
         }
 
         return $this->render('tricks/editTricks.html.twig', [
@@ -192,7 +192,7 @@ class TricksController extends AbstractController
         $medias = $tricks->getMedias();
         if ($medias) {
             foreach ($medias as $media) {
-                $name = $this->getParameter("images_directory") . '/' .$media->getName();
+                $name = $this->getParameter("images_directory") . '/' . $media->getName();
                 if (file_exists($name)) {
                     unlink($name);
                 }
@@ -221,7 +221,7 @@ class TricksController extends AbstractController
         $this->em->flush();
         $this->addFlash('success', 'Votre image favorite à changé !!');
 
-        return $this->redirectToRoute('oneTricks', ['slug'=> $trick->getSlug()]);
+        return $this->redirectToRoute('oneTricks', ['slug' => $trick->getSlug()]);
     }
 
     /**
@@ -236,7 +236,7 @@ class TricksController extends AbstractController
         $this->em->flush();
         $this->addFlash('success', 'Votre image favorite à été supprimé !!');
 
-        return $this->redirectToRoute('oneTricks', ['slug'=> $trick->getSlug()]);
+        return $this->redirectToRoute('oneTricks', ['slug' => $trick->getSlug()]);
     }
 
     /**
@@ -244,7 +244,7 @@ class TricksController extends AbstractController
      */
     public function deleteMedia(Media $media)
     {
-        $name = $this->getParameter("images_directory") . '/' .$media->getName();
+        $name = $this->getParameter("images_directory") . '/' . $media->getName();
         if (file_exists($name)) {
             unlink($name);
         }
@@ -275,7 +275,7 @@ class TricksController extends AbstractController
             $this->em->flush();
             $this->addFlash('success', 'Votre nouveau commentaire est crée !!');
 
-            return $this->redirectToRoute('oneTricks', ['slug'=> $trick->getSlug()]);
+            return $this->redirectToRoute('oneTricks', ['slug' => $trick->getSlug()]);
         }
         $id = $trick->getId();
         $allComments = $this->pagingservice->pagingComment($id, 1, 5, 'getPaginatedComment', $request);
@@ -300,13 +300,13 @@ class TricksController extends AbstractController
         $allComments = $this->pagingservice->pagingComment($id, $page, 5, 'getPaginatedComment', $request);
         $array = [];
         foreach ($allComments as $comments) {
-            $array[]=[
+            $array[] = [
                 'user' => $comments->getUser(),
                 'content' => $comments->getContent(),
                 'date' => $comments->getCreatedAt()
             ];
         }
-        
+
         return $this->json($array, 200, [], ['groups' => 'comment:read']);
     }
 }

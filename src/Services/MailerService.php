@@ -20,16 +20,15 @@ class MailerService
     public function sendMail($email, $subject, $html, $context)
     {
         $email = (new TemplatedEmail())
-                ->from('formationoc@christophedumas1.fr')
-                ->to(new Address($email))
-                ->subject($subject)
+            ->from('formationoc@christophedumas1.fr')
+            ->to(new Address($email))
+            ->subject($subject)
 
             // path of the Twig template to render
-                ->htmlTemplate($html)
+            ->htmlTemplate($html)
 
             // pass variables (name => value) to the template
-                ->context($context)
-        ;
+            ->context($context);
 
         $this->mailer->send($email);
     }

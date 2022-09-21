@@ -1,128 +1,129 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifie un tricks !{% endblock %}
+{% block title %}Modifie un tricks !
+{% endblock %}
 
 {% block body %}
-    <div class="my-3 container">
-        <div class="card border-primary rounded my-5">
-            {{ form_start(formEditTricks) }}
-            <div class="card_header">
-                <div class="row">
-                    {% if favorite %}
-                    <img class="w-100" src="{{ asset('/uploads/'~favorite.name) }}" width="100%" alt="">
-                    {% else %}
-                    <img class="w-100" src="{{ asset('/uploads/default.jpg') }}" width="100%" alt="">
-                    {% endif %}
-                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl">
-                        <div class="d-flex justify-content-start">
-                            <div class="d-flex flex-column">
-                                <h1 class="title_center">
-                                    {{ form_widget(formEditTricks.title) }}
-                                    {{ form_errors(formEditTricks.title) }}
-                                </h1>        
-                                {% if app.user %}
-                                <div class="buttons">
-                                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#favoriteMedia">
-                                        <i class="fa-solid fa-pencil"></i>
-                                    </button>
-                                    <button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button>
-                                </div>
-                                {% endif %}   
-                            </div>
-                        </div>
-                    </div>
-                </div>           
-            </div>
+	<div class="my-3 container">
+		<div class="card border-primary rounded my-5">
+			{{ form_start(formEditTricks) }}
+			<div class="card_header">
+				<div class="row">
+					{% if favorite %}
+						<img class="w-100" src="{{ asset('/uploads/'~favorite.name) }}" width="100%" alt="">
+					{% else %}
+						<img class="w-100" src="{{ asset('/uploads/default.jpg') }}" width="100%" alt="">
+					{% endif %}
+					<div class="col-sm-6 col-md-4 col-lg-4 col-xl">
+						<div class="d-flex justify-content-start">
+							<div class="d-flex flex-column">
+								<h1 class="title_center">
+									{{ form_widget(formEditTricks.title) }}
+									{{ form_errors(formEditTricks.title) }}
+								</h1>
+								{% if app.user %}
+									<div class="buttons">
+										<button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#favoriteMedia">
+											<i class="fa-solid fa-pencil"></i>
+										</button>
+										<button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
+											<i class="fa-solid fa-trash-can"></i>
+										</button>
+									</div>
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <div class="card-body">
-                <div class="row test_body">
-                    {% include "tricks/_carousel.html.twig" %}
-                </div> 
-                <div class="mb-3">
-                    {{ form_widget(formEditTricks.content) }}
-                </div>
-                <div class="d-flex">
-                    <div class="mb-3">
-                        {{ form_row(formEditTricks.medias) }}
-                    </div>
-                    <div class="ms-3 mb-3">
-                        {{ form_row(formEditTricks.urls) }}
-                    </div>
-                </div>
-                    <div class="w-50 mb-3">
-                        {{ form_row(formEditTricks.category) }}
-                    </div> 
-                    <div class="d-flex justify-content-end">
-                        <div class="text-end">
-                            <button type="button" class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#deleteTricks{{ tricks.id }}">
-                                Supprimer le tricks
-                            </button>
-                        </div>
-                        <div class="text-end">
-                            {{ form_row(formEditTricks.save) }}
-                        </div>
-                        {{ form_end(formEditTricks) }}
-                    </div>        
-            </div>
-        </div>
-    </div>
+			<div class="card-body">
+				<div class="row test_body">
+					{% include "tricks/_carousel.html.twig" %}
+				</div>
+				<div class="mb-3">
+					{{ form_widget(formEditTricks.content) }}
+				</div>
+				<div class="d-flex">
+					<div class="mb-3">
+						{{ form_row(formEditTricks.medias) }}
+					</div>
+					<div class="ms-3 mb-3">
+						{{ form_row(formEditTricks.urls) }}
+					</div>
+				</div>
+				<div class="w-50 mb-3">
+					{{ form_row(formEditTricks.category) }}
+				</div>
+				<div class="d-flex justify-content-end">
+					<div class="text-end">
+						<button type="button" class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#deleteTricks{{ tricks.id }}">
+							Supprimer le tricks
+						</button>
+					</div>
+					<div class="text-end">
+						{{ form_row(formEditTricks.save) }}
+					</div>
+					{{ form_end(formEditTricks) }}
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="deleteMedia" tabindex="-1" aria-labelledby="deleteMediaLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body text-center">
-                    <h5>Voulez-vous vraiment supprimer ce média ?</h5>
-                </div>
-                <div class="modal-footer">
-                    {% for m in tricks.medias %}
-                    <img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">  
-                    <div class="me-2 d-flex flex-column align-items-center">
-                        <a href="{{ path('editDeleteMedia', {'id' : m.id}) }}">Supprimer</a>
-                    </div>
-                    {% endfor %}    
-                </div>
-            </div>
-        </div>
-    </div>
+	<!-- Modal -->
+	<div class="modal fade" id="deleteMedia" tabindex="-1" aria-labelledby="deleteMediaLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<h5>Voulez-vous vraiment supprimer ce média ?</h5>
+				</div>
+				<div class="modal-footer">
+					{% for m in tricks.medias %}
+						<img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">
+						<div class="me-2 d-flex flex-column align-items-center">
+							<a href="{{ path('editDeleteMedia', {'id' : m.id}) }}">Supprimer</a>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="favoriteMedia" tabindex="-1" aria-labelledby="favoriteMediaLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body text-center">
-                    <h5>Choisissez votre nouvel image à la une !</h5>
-                </div>
-                <div class="modal-footer">
-                    {% for m in tricks.medias %}
-                    <img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">  
-                    <div class="me-2 d-flex flex-column align-items-center">
-                        <a href="{{ path('favoriteMedia', {'id' : m.id, 'slug' : tricks.slug}) }}">Ajouter comme favoris</a>
-                    </div>
-                    {% endfor %}    
-                </div>
-            </div>
-        </div>
-    </div>
+	<!-- Modal -->
+	<div class="modal fade" id="favoriteMedia" tabindex="-1" aria-labelledby="favoriteMediaLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<h5>Choisissez votre nouvel image à la une !</h5>
+				</div>
+				<div class="modal-footer">
+					{% for m in tricks.medias %}
+						<img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">
+						<div class="me-2 d-flex flex-column align-items-center">
+							<a href="{{ path('favoriteMedia', {'id' : m.id, 'slug' : tricks.slug}) }}">Ajouter comme favoris</a>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="deleteTricks{{ tricks.id }}" tabindex="-1" aria-labelledby="deleteTricksLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body text-center">
-                    <h5>Voulez-vous vraiment supprimer cette figure ?</h5>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <a href="{{ path('deleteTricks', {'id' : tricks.id}) }}" class="btn btn-danger">Confirmer</a>
-                </div>
-            </div>
-        </div>
-    </div>  
+	<!-- Modal -->
+	<div class="modal fade" id="deleteTricks{{ tricks.id }}" tabindex="-1" aria-labelledby="deleteTricksLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<h5>Voulez-vous vraiment supprimer cette figure ?</h5>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<a href="{{ path('deleteTricks', {'id' : tricks.id}) }}" class="btn btn-danger">Confirmer</a>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 
 {% block javascripts %}
-<script src="/js/carousel.js"></script>
+	<script src="/js/carousel.js"></script>
 {% endblock %}

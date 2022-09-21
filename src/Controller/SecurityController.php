@@ -26,7 +26,7 @@ class SecurityController extends AbstractController
         $this->em = $em;
         $this->userRepository = $userRepository;
     }
-    
+
     /**
      * @Route("/login", name="app_login")
      */
@@ -61,7 +61,7 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $user =  $this->userRepository->findOneByEmail($data['email']);
-            
+
             if ($user === null) {
                 $this->addFlash('danger', 'Cette adresse e-mail est inconnue');
                 //dd('test', $user);
@@ -69,9 +69,9 @@ class SecurityController extends AbstractController
             }
             $token = $tokenGenerator->generateToken();
             try {
-                
+
                 $user->setResetToken($token);
-                
+
                 $this->em->persist($user);
                 $this->em->flush();
                 //dd($user, $token);
@@ -79,10 +79,12 @@ class SecurityController extends AbstractController
                 $this->addFlash('warning', $e->getMessage());
                 return $this->redirectToRoute('app_login');
             }
-            $this->addFlash('danger', 'yop');
+            $this->addFlash('danger', 'un mail vient de vous être envoyé à l\'adresse saisie');
             $url = $this->generateUrl('app_reset_password', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
-            $mailer->sendMail($user->getEmail(), 'Reset !', 'emails/reset_pass.html.twig', ['token' => $token,
-            'url' => $url]);
+            $mailer->sendMail($user->getEmail(), 'Reset !', 'emails/reset_pass.html.twig', [
+                'token' => $token,
+                'url' => $url
+            ]);
             /*$email = (new TemplatedEmail())
                 ->from('formationoc@christophedumas1.fr')
                 ->to($user->getEmail())
@@ -104,19 +106,19 @@ class SecurityController extends AbstractController
     }
 
     /**
-    * @Route("/reset_pass/{token}", name="app_reset_password")
-    */
+     * @Route("/reset_pass/{token}", name="app_reset_password")
+     */
     public function resetPassword(Request $request, $token, UserPasswordHasherInterface $userPasswordHasher)
     {
         $user =  $this->userRepository->findOneBy(['reset_token' => $token]);
-        
+
         if ($user === null) {
             dd('test', $user);
             $this->addFlash('danger', 'Token Inconnu');
             return $this->redirectToRoute('forget_password');
         }
         if ($request->isMethod('POST')) {
-           dd($user);
+            dd($user);
             $user->setResetToken(null);
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
@@ -132,7 +134,7 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_login');
         } else {
             // Si on n'a pas reçu les données, on affiche le formulaire
-           return $this->render('security/reset_password.html.twig', ['token' => $token]);
+            return $this->render('security/reset_password.html.twig', ['token' => $token]);
         }
     }
 }
