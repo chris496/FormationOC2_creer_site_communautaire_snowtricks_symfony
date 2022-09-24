@@ -14,8 +14,7 @@ class ResetPassType extends AbstractType
     {
         $builder
             ->add('email', EmailType::class)
-            ->add('valider', SubmitType::class)
-        ;
+            ->add('valider', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

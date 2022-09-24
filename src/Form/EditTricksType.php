@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\User;
 use App\Entity\Tricks;
 use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
@@ -15,7 +14,6 @@ use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 class EditTricksType extends AbstractType
@@ -34,13 +32,13 @@ class EditTricksType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank([
-                       'message' => 'Veuillez saisir un nom'
+                        'message' => 'Veuillez saisir un nom'
                     ]),
                     new Length([
-                       'min' => 2,
-                       'minMessage' => 'Le nom doit contenir au minimum {{ limit }} caractères'
+                        'min' => 2,
+                        'minMessage' => 'Le nom doit contenir au minimum {{ limit }} caractères'
                     ]),
-                 ]
+                ]
             ])
             ->add('content', TextareaType::class, [
                 'required' => true,
@@ -58,11 +56,11 @@ class EditTricksType extends AbstractType
                     'class' => 'input-group',
                 ],
                 'constraints' => [
-                  new NotBlank([
-                    'message' => 'Veuillez choisir un groupe'
-                  ])
+                    new NotBlank([
+                        'message' => 'Veuillez choisir un groupe'
+                    ])
                 ]
-              ])
+            ])
             ->add('medias', FileType::class, [
                 'label' => 'Ajouter des photos :',
                 'multiple' => true,
@@ -78,11 +76,11 @@ class EditTricksType extends AbstractType
                 'label' => "Ajouter des videos",
                 'row_attr' => [
                     'class' => 'input-group',
-                ]])
+                ]
+            ])
             ->add('save', SubmitType::class, [
                 'label' => "Valider les modifications"
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

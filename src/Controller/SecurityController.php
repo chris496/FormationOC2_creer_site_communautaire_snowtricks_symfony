@@ -6,9 +6,7 @@ use App\Form\ResetPassType;
 use App\Services\MailerService;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -85,19 +83,6 @@ class SecurityController extends AbstractController
                 'token' => $token,
                 'url' => $url
             ]);
-            /*$email = (new TemplatedEmail())
-                ->from('formationoc@christophedumas1.fr')
-                ->to($user->getEmail())
-                ->subject('Reset !')
-            // path of the Twig template to render
-                ->htmlTemplate('emails/reset_pass.html.twig')
-            // pass variables (name => value) to the template
-                ->context([
-                    'token' => $token,
-                    'url' => $url
-                ])
-            ;
-            $mailer->send($email);*/
         }
 
         return $this->render('security/forget_password.html.twig', [
@@ -131,7 +116,6 @@ class SecurityController extends AbstractController
 
             return $this->redirectToRoute('app_login');
         } else {
-            // Si on n'a pas reçu les données, on affiche le formulaire
             return $this->render('security/reset_password.html.twig', ['token' => $token]);
         }
     }

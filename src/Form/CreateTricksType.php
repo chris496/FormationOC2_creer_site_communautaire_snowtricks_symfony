@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\User;
 use App\Entity\Tricks;
 use App\Entity\Category;
 use Symfony\Component\Form\AbstractType;
@@ -33,13 +32,13 @@ class CreateTricksType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank([
-                       'message' => 'Veuillez saisir un nom'
+                        'message' => 'Veuillez saisir un nom'
                     ]),
                     new Length([
-                       'min' => 2,
-                       'minMessage' => 'Le nom doit contenir au minimum {{ limit }} caractères'
+                        'min' => 2,
+                        'minMessage' => 'Le nom doit contenir au minimum {{ limit }} caractères'
                     ]),
-                 ]
+                ]
             ])
             ->add('content', TextareaType::class, [
                 'required' => true,
@@ -57,11 +56,11 @@ class CreateTricksType extends AbstractType
                     'class' => 'input-group',
                 ],
                 'constraints' => [
-                  new NotBlank([
-                    'message' => 'Veuillez choisir un groupe'
-                  ])
+                    new NotBlank([
+                        'message' => 'Veuillez choisir un groupe'
+                    ])
                 ]
-              ])
+            ])
             ->add('medias', FileType::class, [
                 'label' => 'Ajouter des fichiers :',
                 'multiple' => true,
@@ -76,11 +75,11 @@ class CreateTricksType extends AbstractType
                 'required' => false,
                 'row_attr' => [
                     'class' => 'input-group',
-                ]])
+                ]
+            ])
             ->add('save', SubmitType::class, [
                 'label' => "Valider"
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

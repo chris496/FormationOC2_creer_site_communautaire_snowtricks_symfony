@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -63,9 +62,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
-    * @ORM\Column(type="datetime_immutable")
-    * @Groups("comment:read")
-    */
+     * @ORM\Column(type="datetime_immutable")
+     * @Groups("comment:read")
+     */
     private $createdAt;
 
     /**
