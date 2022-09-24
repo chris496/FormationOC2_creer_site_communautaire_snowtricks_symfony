@@ -27,18 +27,21 @@ class Comment
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups("comment:read")
      */
     private $createdAt;
 
     /**
      * @ORM\ManyToOne(targetEntity=Tricks::class, inversedBy="comments")
      * @ORM\JoinColumn(onDelete="CASCADE")
+     * @Groups("comment:read")
      */
     private $tricks;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="comments")
      * @ORM\JoinColumn(onDelete="CASCADE")
+     * @Groups("comment:read")
      */
     private $user;
 

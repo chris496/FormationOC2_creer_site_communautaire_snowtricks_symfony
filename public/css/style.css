@@ -158,9 +158,13 @@ img {
     display: none !important;
   }
 
+  html, body {
+    height: 100%;
+  }
+
   .test {
-    position: absolute;
-    bottom: 0px;
+    position: fixed;
+    bottom: 0;
     justify-content: space-around;
     align-items: center;
     width: 100%;

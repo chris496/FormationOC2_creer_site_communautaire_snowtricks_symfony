@@ -6,6 +6,7 @@ use App\Entity\Media;
 use App\Entity\Tricks;
 use DateTimeImmutable;
 use App\Entity\Comment;
+use App\Entity\User;
 use App\Form\EditTricksType;
 use App\Form\CreateTricksType;
 use App\Services\VideoService;
@@ -15,6 +16,7 @@ use App\Services\GravatarService;
 use App\Repository\MediaRepository;
 use App\Repository\TricksRepository;
 use App\Repository\CommentRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -293,17 +295,19 @@ class TricksController extends AbstractController
     /**
      * @Route("/tricks/{slug}/pagingComment/{page}", name="see_more_comment")
      */
-    public function pagingComment(string $slug, int $page, Request $request): Response
+    public function pagingComment(string $slug, int $page, Request $request, CommentRepository $commentRepository): Response
     {
         $trick = $this->tricksrepository->findOneBy(['slug' => $slug]);
+        $avatar = $this->gravatar->get_gravatar('form', 80, 'retro', 'g', false, array());
         $id = $trick->getId();
         $allComments = $this->pagingservice->pagingComment($id, $page, 5, 'getPaginatedComment', $request);
         $array = [];
         foreach ($allComments as $comments) {
             $array[] = [
-                'user' => $comments->getUser(),
+                'user' => $commentRepository->find($comments->getId())->getUser(),
                 'content' => $comments->getContent(),
-                'date' => $comments->getCreatedAt()
+                'date' => $comments->getCreatedAt(),
+                'avatar' => $avatar
             ];
         }
 

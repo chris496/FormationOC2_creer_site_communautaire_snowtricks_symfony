@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class VideoExtension extends AbstractExtension
 {
     private $em;
+    private $clientHttp;
 
     public function __construct(EntityManagerInterface $em)
     {
@@ -44,24 +45,9 @@ class VideoExtension extends AbstractExtension
         }
 
         if (strpos($urlUpdate, 'vimeo')) {
-            //$videoId = str_replace('https://vimeo.com/', 'https://player.vimeo.com/video/', $urlUpdate);
             $video = str_replace('https://vimeo.com/', '', $urlUpdate);
-            $vimeoThumbs = 'http://vimeo.com/api/v2/video/' . $video . '.json';
-
-            //curl request
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $vimeoThumbs);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            $curlData = curl_exec($curl);
-            curl_close($curl);
-
-            $vimeoThumbs = json_decode($curlData, true);
-            dd($vimeoThumbs);
-            $videoId = $vimeoThumbs[0]['url'];
-
-            $videoId = str_replace('http://', 'https://', $videoId);
-
-            return $videoId;
+            $url = 'https://player.vimeo.com/video/'.$video;
+            return $url;
         }
 
         if (strpos($urlUpdate, 'dailymotion')) {

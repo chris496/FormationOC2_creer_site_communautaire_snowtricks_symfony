@@ -6,8 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
@@ -20,47 +21,56 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("comment:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Groups("comment:read")
      */
     private $email;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups("comment:read")
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups("comment:read")
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups("comment:read")
      */
     private $photo;
 
     /**
      * @ORM\Column(type="json")
+     * @Groups("comment:read")
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Groups("comment:read")
      */
     private $password;
 
     /**
     * @ORM\Column(type="datetime_immutable")
+    * @Groups("comment:read")
     */
     private $createdAt;
 
     /**
      * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @Groups("comment:read")
      */
     private $updatedAt;
 

@@ -113,12 +113,10 @@ class SecurityController extends AbstractController
         $user =  $this->userRepository->findOneBy(['reset_token' => $token]);
 
         if ($user === null) {
-            dd('test', $user);
             $this->addFlash('danger', 'Token Inconnu');
             return $this->redirectToRoute('forget_password');
         }
         if ($request->isMethod('POST')) {
-            dd($user);
             $user->setResetToken(null);
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
