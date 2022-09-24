@@ -20,16 +20,23 @@
 	</nav>
 
 
-	<nav class="test d-flex justify-content-between flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm navbarBottom">
+	<nav class="nav_phone d-flex justify-content-between flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm navbarBottom">
 		<a class="nav-link active" aria-current="page" href="{{ path('home') }}">
 			<i class="fa-solid fa-house"></i>
 		</a>
-		<a class="nav-link active" aria-current="page" href="{{ path('app_login') }}">
-			<i class="fa-solid fa-note-sticky"></i>
-		</a>
 		{% if app.user %}
+			<a class="nav-link" href="{{ path('newTricks') }}">
+				<i class="fa-solid fa-plus-minus"></i>
+			</a>
 			<a class="nav-link" href="{{ path('app_logout') }}">
 				<i class="fa-solid fa-right-from-bracket"></i>
+			</a>
+		{% else %}
+			<a class="nav-link active" aria-current="page" href="{{ path('app_login') }}">
+				<i class="fa-solid fa-note-sticky"></i>
+			</a>
+			<a class="nav-link active" aria-current="page" href="{{ path('app_register') }}">
+				<i class="fa-solid fa-user-plus"></i>
 			</a>
 		{% endif %}
 	</nav>

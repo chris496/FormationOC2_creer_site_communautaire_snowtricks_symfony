@@ -1,0 +1,121 @@
+{% block body %}
+
+	<!-- delete tricks -->
+	<div class="modal fade" id="deleteTricks{{ tricks.id }}" tabindex="-1" aria-labelledby="deleteTricksLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<h5>Voulez-vous vraiment supprimer cette figure ?</h5>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+					<a href="{{ path('deleteTricks', {'id' : tricks.id}) }}" class="btn btn-danger">Confirmer</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- delete picture -->
+	{% for m in tricks.medias %}
+		<div class="modal fade" id="deleteMedia{{ m.id }}" tabindex="-1" aria-labelledby="deleteMediaLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body text-center">
+						<h5>Voulez-vous vraiment supprimer ce média ?</h5>
+					</div>
+					<div class="modal-footer d-flex flex-column">
+
+						<img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">
+						<div class="me-2 d-flex flex-column align-items-center">
+							<a href="{{ path('editDeleteMedia', {'id' : m.id}) }}">Supprimer</a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+
+	<!-- delete favorite -->
+	{% if favorite %}
+		<div class="modal fade" id="deleteFavoriteMedia{{ favorite.id }}" tabindex="-1" aria-labelledby="deleteFavoriteMediaLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body text-center">
+						<h5>Voulez-vous vraiment supprimer ce média comme favoris ?</h5>
+					</div>
+					<div class="modal-footer d-flex flex-column">
+
+
+						<div class="me-2 d-flex flex-column align-items-center">
+							<a href="{{ path('deleteFavoriteMedia', {'id' : favorite.id, 'slug' : tricks.slug}) }}">confirmer</a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+
+	<!-- delete video -->
+	{% for url in tricks.urls %}
+		<div class="modal fade" id="deleteMedia{{ url.id }}" tabindex="-1" aria-labelledby="deleteMediaLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body text-center">
+						<h5>Voulez-vous vraiment supprimer ce média ?</h5>
+					</div>
+					<div class="modal-footer d-flex flex-column">
+
+						<embed class="diapo me-2" type="video/webm" src="{{ video(url.url) }}">
+						<div class="me-2 d-flex flex-column align-items-center">
+							<a href="{{ path('editDeleteMedia', {'id' : url.id}) }}">Supprimer</a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+
+	<!-- favorite picture (carousel) -->
+	{% for m in tricks.medias %}
+		<div class="modal fade" id="favoriteMedia{{ m.id }}" tabindex="-1" aria-labelledby="favoriteMediaLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-body text-center">
+						<h5>Mettre ce média en favori ?</h5>
+					</div>
+					<div class="modal-footer d-flex flex-column">
+
+						<img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">
+						<div class="me-2 d-flex flex-column align-items-center">
+							<a href="{{ path('favoriteMedia', {'id' : m.id, 'slug' : tricks.slug}) }}">Ajouter en favori</a>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+
+	<!-- favorite picture -->
+	<div class="modal fade" id="favoriteMedia" tabindex="-1" aria-labelledby="favoriteMediaLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<h5>Choisissez votre nouvel image à la une !</h5>
+				</div>
+				<div class="modal-footer d-flex flex-column">
+					{% for m in tricks.medias %}
+						<img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">
+						<div class="me-2 d-flex flex-column align-items-center">
+							<a href="{{ path('favoriteMedia', {'id' : m.id, 'slug' : tricks.slug}) }}">Ajouter comme favoris</a>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

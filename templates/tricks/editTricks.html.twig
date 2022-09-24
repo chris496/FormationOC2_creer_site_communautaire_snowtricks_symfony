@@ -5,7 +5,7 @@
 
 {% block body %}
 	<div class="my-3 container">
-		<div class="card border-primary rounded my-5">
+		<div class="card border-primary rounded my-2">
 			{{ form_start(formEditTricks) }}
 			<div class="card_header">
 				<div class="row">
@@ -26,9 +26,11 @@
 										<button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#favoriteMedia">
 											<i class="fa-solid fa-pencil"></i>
 										</button>
-										<button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteMedia">
-											<i class="fa-solid fa-trash-can"></i>
-										</button>
+										{% if favorite %}
+											<button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#deleteFavoriteMedia{{ favorite.id }}">
+												<i class="fa-solid fa-trash-can"></i>
+											</button>
+										{% endif %}
 									</div>
 								{% endif %}
 							</div>
@@ -39,16 +41,16 @@
 
 			<div class="card-body">
 				<div class="row test_body">
-					{% include "tricks/_carousel.html.twig" %}
+					{% include "tricks/layout/_carousel.html.twig" %}
 				</div>
 				<div class="mb-3">
 					{{ form_widget(formEditTricks.content) }}
 				</div>
-				<div class="d-flex">
+				<div class="flex_phone d-flex">
 					<div class="mb-3">
 						{{ form_row(formEditTricks.medias) }}
 					</div>
-					<div class="ms-3 mb-3">
+					<div class="url_phone ms-3 mb-3">
 						{{ form_row(formEditTricks.urls) }}
 					</div>
 				</div>
@@ -70,58 +72,7 @@
 		</div>
 	</div>
 
-	<!-- Modal -->
-	<div class="modal fade" id="deleteMedia" tabindex="-1" aria-labelledby="deleteMediaLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-body text-center">
-					<h5>Voulez-vous vraiment supprimer ce média ?</h5>
-				</div>
-				<div class="modal-footer">
-					{% for m in tricks.medias %}
-						<img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">
-						<div class="me-2 d-flex flex-column align-items-center">
-							<a href="{{ path('editDeleteMedia', {'id' : m.id}) }}">Supprimer</a>
-						</div>
-					{% endfor %}
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Modal -->
-	<div class="modal fade" id="favoriteMedia" tabindex="-1" aria-labelledby="favoriteMediaLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-body text-center">
-					<h5>Choisissez votre nouvel image à la une !</h5>
-				</div>
-				<div class="modal-footer">
-					{% for m in tricks.medias %}
-						<img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">
-						<div class="me-2 d-flex flex-column align-items-center">
-							<a href="{{ path('favoriteMedia', {'id' : m.id, 'slug' : tricks.slug}) }}">Ajouter comme favoris</a>
-						</div>
-					{% endfor %}
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- Modal -->
-	<div class="modal fade" id="deleteTricks{{ tricks.id }}" tabindex="-1" aria-labelledby="deleteTricksLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-body text-center">
-					<h5>Voulez-vous vraiment supprimer cette figure ?</h5>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-					<a href="{{ path('deleteTricks', {'id' : tricks.id}) }}" class="btn btn-danger">Confirmer</a>
-				</div>
-			</div>
-		</div>
-	</div>
+	{% include "tricks/layout/modal/_modal.html.twig" %}
 {% endblock %}
 
 {% block javascripts %}

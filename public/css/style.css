@@ -31,6 +31,10 @@ p {
   background-size: cover;
 }
 
+.nav_phone {
+  display: none !important;
+}
+
 /* page oneTricks */
 
 .card_header {
@@ -50,17 +54,6 @@ p {
   position: absolute;
   top: 2%;
   right: 2%;
-}
-
-@media (min-width: 768px) {
-  .carousel-inner {
-    display: flex;
-  }
-  .carousel-item {
-    margin-right: 0;
-    flex: 0 0 33.333333%;
-    display: block;
-  }
 }
 
 .buttons {
@@ -138,10 +131,6 @@ img {
   cursor: pointer;
 }
 
-.test {
-  display: none !important;
-}
-
 .himg {
   height: 180px;
   object-fit: cover;
@@ -149,6 +138,17 @@ img {
 
 .com_date {
   font-size: 11px;
+}
+
+@media (min-width: 768px) {
+  .carousel-inner {
+    display: flex;
+  }
+  .carousel-item {
+    margin-right: 0;
+    flex: 0 0 33.333333%;
+    display: block;
+  }
 }
 
 @media (max-width: 768px) {
@@ -162,13 +162,23 @@ img {
     height: 100%;
   }
 
-  .test {
+  .nav_phone {
     position: fixed;
     bottom: 0;
+    margin-bottom: 0 !important;;
     justify-content: space-around;
     align-items: center;
     width: 100%;
-    z-index: 1;
+    z-index: 999;
     display: flex !important;
+  }
+
+  .flex_phone {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .url_phone {
+    margin-left: 0px !important;
   }
 }

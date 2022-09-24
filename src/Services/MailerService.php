@@ -6,12 +6,14 @@ use Symfony\Component\Mime\Address;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 
 class MailerService
 {
-    public function __construct(MailerInterface $mailer)
+    public function __construct(MailerInterface $mailer, ContainerBagInterface $params)
     {
         $this->mailer = $mailer;
+        $this->params = $params;
     }
 
     /**
@@ -20,7 +22,7 @@ class MailerService
     public function sendMail($email, $subject, $html, $context)
     {
         $email = (new TemplatedEmail())
-            ->from('formationoc@christophedumas1.fr')
+            ->from($this->params->get('MAILER_FROM'))
             ->to(new Address($email))
             ->subject($subject)
 
