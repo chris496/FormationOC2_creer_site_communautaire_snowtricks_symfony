@@ -4,7 +4,7 @@
 			{% for media in tricks.medias %}
 				<div class="swiper-slide">
 					<div class="d-flex flex-column">
-						<img class="diapo me-2" src="{{ asset('/uploads/'~media.name) }}" alt="">
+						<img class="diapo me-2" src="{{ asset('/img/'~media.name) }}" alt="">
 						{% if app.user %}
 							<div class="d-flex justify-content-around bord me-2">
 								<button type="button" class="btn border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#favoriteMedia{{ media.id }}">

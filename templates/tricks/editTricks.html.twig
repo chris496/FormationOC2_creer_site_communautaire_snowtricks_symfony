@@ -10,9 +10,9 @@
 			<div class="card_header">
 				<div class="row">
 					{% if favorite %}
-						<img class="w-100" src="{{ asset('/uploads/'~favorite.name) }}" width="100%" alt="">
+						<img class="w-100" src="{{ asset('/img/'~favorite.name) }}" width="100%" alt="">
 					{% else %}
-						<img class="w-100" src="{{ asset('/uploads/default.jpg') }}" width="100%" alt="">
+						<img class="w-100" src="{{ asset('/img/default.jpg') }}" width="100%" alt="">
 					{% endif %}
 					<div class="col-sm-6 col-md-4 col-lg-4 col-xl">
 						<div class="d-flex justify-content-start">

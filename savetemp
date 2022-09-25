@@ -15,9 +15,9 @@
                     <!--<img class="w-100" src="../img/home2.jpg" alt="">-->
                 {% for media in tricks.medias %} 
                     {% if media.favorite == 1 %}
-                        <img src="{{ asset('/uploads/'~media.name) }}" width="100%" alt="">
+                        <img src="{{ asset('/img/'~media.name) }}" width="100%" alt="">
                     {% else %}
-                        <img src="{{ asset('/uploads/default.jpg') }}" width="100%" alt="">
+                        <img src="{{ asset('/img/default.jpg') }}" width="100%" alt="">
                     {% endif %}
                 {% endfor %}
             </div>
@@ -29,7 +29,7 @@
                         <div class="col-sm-6 col-md-4 col-lg-4 col-xl">
                             <div class="d-flex justify-content-start">
                                 <div class="d-flex flex-column">
-                                    <img class="me-2" src="{{ asset('/uploads/'~media.name) }}" width="300px" alt="">
+                                    <img class="me-2" src="{{ asset('/img/'~media.name) }}" width="300px" alt="">
                                     {% if app.user %}
                                     <div class="border">
                                         <a class="btn border-0 bg-transparent" href="#"><i class="fa-solid fa-pencil"></i></a>

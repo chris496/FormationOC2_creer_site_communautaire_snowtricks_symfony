@@ -13,9 +13,9 @@
 					{{ tricks.title }}
 				</h1>
 				{% if favorite %}
-					<img class="w-100" src="{{ asset('/uploads/'~favorite.name) }}" width="100%" alt="">
+					<img class="w-100" src="{{ asset('/img/'~favorite.name) }}" width="100%" alt="">
 				{% else %}
-					<img class="w-100" src="{{ asset('/uploads/default.jpg') }}" width="100%" alt="">
+					<img class="w-100" src="{{ asset('/img/default.jpg') }}" width="100%" alt="">
 				{% endif %}
 
 				{% if app.user %}

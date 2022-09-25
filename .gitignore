@@ -8,7 +8,6 @@
 /public/bundles/
 /var/
 /vendor/
-uploads
 /tools
 ###< symfony/framework-bundle ###
 

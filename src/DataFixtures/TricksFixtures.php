@@ -28,11 +28,11 @@ class TricksFixtures extends Fixture
     {
         $faker = Factory::create('fr_FR');
 
-        $user = [];
+        $users = [];
         $categorie = ['Grabs', 'Rotations', 'Flips', 'Slides', 'Misaligned Rotations', 'One foot', 'Old school'];
         $tricksName = ['Nose Grab', 'Japan Air', '720', '1080', 'Mac Twist', 'Hakon Flip', 'Rodeo', 'Misty', 'Nose Slide', 'Tail Slide', 'One Footers', 'One foot Indy', 'Method Air', 'Backside Air', 'Rocket Air'];
 
-        for ($u = 0; $u < 1; $u++) {
+        for ($u = 0; $u < 5; $u++) {
             $user = new User();
             $user->setCreatedAt(new DateTimeImmutable());
             $user->setEmail($faker->safeEmail)
@@ -43,6 +43,7 @@ class TricksFixtures extends Fixture
 
             $user->setPassword($password);
             $manager->persist($user);
+            $users[] = $user;
         }
 
         foreach ($categorie as $cat) {
@@ -54,24 +55,39 @@ class TricksFixtures extends Fixture
 
         foreach ($tricksName as $test) {
             $tricks = new Tricks();
-            $img = new Media();
-            $img->setName('/default.jpg');
+            $video = new Media();
             $tricks->setTitle($test)
-                ->setContent($faker->text(40))
+                ->setContent($faker->text(400))
                 ->setCreatedAt(new DateTimeImmutable())
                 ->setSlug(strtolower($this->slugger->slug($tricks->getTitle())))
-                ->addMedia($img)
+                ->addUrl($video)
                 ->setCategory($faker->randomElement($cats))
                 ->setUser($user);
 
+            for ($m = 1; $m < 3; $m++) {
+                $img = new Media();
+                $img->setName($tricks->getSlug(). '' .$m .'.jpg');
+                
+                $tricks->addMedia($img);
+                $manager->persist($img);
+
+                if($m === 2)
+                {
+                    $img->setFavorite(1);
+                }
+            }
+            $video->setUrl('https://www.youtube.com/watch?v=t705_V-RDcQ&ab_channel=RedBull');  
+            $video->setName('video_tricks'); 
+            $manager->persist($video);
+
             $manager->persist($tricks);
 
-
-            for ($k = 0; $k < 4; $k++) {
+            for ($k = 0; $k < 10; $k++) {
                 $comment = new Comment();
                 $comment->setContent($faker->text(40))
                     ->setCreatedAt(new DateTimeImmutable())
-                    ->setTricks($tricks);
+                    ->setTricks($tricks)
+                    ->setUser($faker->randomElement($users));
 
                 $manager->persist($comment);
             }

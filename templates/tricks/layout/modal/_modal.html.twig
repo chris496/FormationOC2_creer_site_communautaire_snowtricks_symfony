@@ -26,7 +26,7 @@
 					</div>
 					<div class="modal-footer d-flex flex-column">
 
-						<img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">
+						<img class="diapo me-2" src="{{ asset('/img/'~m.name) }}" alt="">
 						<div class="me-2 d-flex flex-column align-items-center">
 							<a href="{{ path('editDeleteMedia', {'id' : m.id}) }}">Supprimer</a>
 						</div>
@@ -89,7 +89,7 @@
 					</div>
 					<div class="modal-footer d-flex flex-column">
 
-						<img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">
+						<img class="diapo me-2" src="{{ asset('/img/'~m.name) }}" alt="">
 						<div class="me-2 d-flex flex-column align-items-center">
 							<a href="{{ path('favoriteMedia', {'id' : m.id, 'slug' : tricks.slug}) }}">Ajouter en favori</a>
 						</div>
@@ -109,7 +109,7 @@
 				</div>
 				<div class="modal-footer d-flex flex-column">
 					{% for m in tricks.medias %}
-						<img class="diapo me-2" src="{{ asset('/uploads/'~m.name) }}" alt="">
+						<img class="diapo me-2" src="{{ asset('/img/'~m.name) }}" alt="">
 						<div class="me-2 d-flex flex-column align-items-center">
 							<a href="{{ path('favoriteMedia', {'id' : m.id, 'slug' : tricks.slug}) }}">Ajouter comme favoris</a>
 						</div>
