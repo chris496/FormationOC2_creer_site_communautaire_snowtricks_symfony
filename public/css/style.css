@@ -158,14 +158,15 @@ img {
     display: none !important;
   }
 
-  html, body {
+  html,
+  body {
     height: 100%;
   }
 
   .nav_phone {
     position: fixed;
     bottom: 0;
-    margin-bottom: 0 !important;;
+    margin-bottom: 0 !important;
     justify-content: space-around;
     align-items: center;
     width: 100%;
