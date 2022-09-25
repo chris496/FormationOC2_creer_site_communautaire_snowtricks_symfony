@@ -46,7 +46,7 @@ php bin/console doctrine:database:create
 * Créez les différentes tables de la base de données :
 
 ```bash
-php bin/console doctrine:migrations:migrate
+php bin/console doctrine:schema:update --force
 ```
 
 * Installer les fixtures si vous souhaitez démarrer avec un jeu de données :
