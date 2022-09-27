@@ -51,7 +51,7 @@ class TricksRepository extends ServiceEntityRepository
     public function getPaginatedTricks($page, $limit)
     {
         $query = $this->createQueryBuilder('t')
-            ->orderBy('t.createdAt')
+            ->orderBy('t.createdAt', 'DESC')
             ->setFirstResult(($page * $limit) - $limit)
             ->setMaxResults($limit)
         ;
