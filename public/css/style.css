@@ -140,6 +140,10 @@ img {
   font-size: 11px;
 }
 
+#btn_display_medias {
+  display: none;
+}
+
 @media (min-width: 768px) {
   .carousel-inner {
     display: flex;
@@ -181,5 +185,9 @@ img {
 
   .url_phone {
     margin-left: 0px !important;
+  }
+
+  #btn_display_medias {
+    display: block;
   }
 }

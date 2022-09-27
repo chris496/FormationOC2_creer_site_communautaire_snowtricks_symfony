@@ -33,7 +33,10 @@
 			</div>
 
 			<div class="card-body">
-				<div class="row test_body">
+				<div class="d-grid gap-2 d-md-block">
+ 					<button id="btn_display_medias" class="btn btn-primary mb-2">Afficher les médias</button>
+				</div>
+				<div id="display_medias" class="row">
 					{% include "tricks/layout/_carousel.html.twig" %}
 				</div>
 				{% include "tricks/layout/_content.html.twig" %}
@@ -103,6 +106,20 @@
 			newComment.append(newp);
 					})
 				})
+			})
+		</script>
+
+		<script>
+			let btn_display = document.getElementById("btn_display_medias")
+			let display_medias = document.getElementById("display_medias")
+			btn_display.addEventListener("click", () => {
+				if(getComputedStyle(display_medias).display != "none"){
+					display_medias.style.display = "none"
+					btn_display.innerHTML = "afficher les médias"
+				} else {
+					display_medias.style.display = "block"
+					btn_display.innerHTML = "masquer les médias"
+				}
 			})
 		</script>
 	{% endblock %}
